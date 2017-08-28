@@ -47,10 +47,10 @@ This function balances univariate imbalance time series data based on structure 
 \examples{
 # This is a simple example to show the usage. A more complex example is inside the vignette.
 # loading data
-data(dataset_synthetic_control)
+data(synthetic_control)
 # get split feature and label data 
-train_label <- dataset_synthetic_control$train_y
-train_sample <- dataset_synthetic_control$train_x
+train_label <- synthetic_control$train_y
+train_sample <- synthetic_control$train_x
 # the first dimension of feature and label shall be the same
 # the second dimention of feature is the time sequence length
 dim(train_sample)
@@ -82,4 +82,3 @@ H. Cao, X.-L. Li, Y.-K. Woon and S.-K. Ng,
             Proc. IEEE Int. Conf. on Data Mining ICDM, 
             pp. 1008-1013, 2011
 }
-
