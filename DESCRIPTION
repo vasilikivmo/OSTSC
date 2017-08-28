@@ -1,13 +1,12 @@
 Package: OSTSC
 Title: Over sampling for time series classification
 Version: 0.0.0.9000
-Author: Lan Wei [aut, trl, cre],
-    Hong Cao [aut],
-    Matthew Dixon [ctb],
-    Diego Klabjan [ctb]
+Author: Matthew Dixon [ctb],
+    Diego Klabjan [ctb],
+    Lan Wei [aut, trl, cre]
 Maintainer: Lan Wei <lweicdsor@gmail.com>
-Description: To balance the univariate imbalance time series data by a combination
-    of ESPO and ADASYN approaches.
+Description: Oversampling of imbalanced univariate time series classification data using
+    integrated ESPO and ADASYN methods. This code is ported from a matlab implementation by Cao et al. [2011] and adapted for use with Recurrent Neural Networks.
 Depends: R (>= 3.2.3)
 License: GPL-3
 URL: https://github.com/lweicdsor/OSTSC
