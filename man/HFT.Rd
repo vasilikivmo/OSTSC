@@ -11,7 +11,7 @@
   Each sequence occurs in one line.
 }}
 \usage{
-HFT()
+data(HFT)
 }
 \description{
 The data is a random selection from a high frequency trading data. The feature is from instantaneous 
