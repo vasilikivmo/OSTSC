@@ -16,8 +16,8 @@
 #' 
 #' @docType data
 #' @keywords datasets
-#' @export HFT
-#' @usage HFT()
+#' @name HFT
+#' @usage data(HFT)
 #' @references Matthew Dixon.(2017) Sequence Classification of the Limit Order Book using Recurrent Neural Networks. 
 #'             arXiv:1707.05642.
 
