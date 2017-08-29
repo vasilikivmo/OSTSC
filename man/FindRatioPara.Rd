@@ -4,12 +4,12 @@
 \alias{FindRatioPara}
 \title{Find the distribution of the positive data.}
 \usage{
-FindRatioPara(P, N, m)
+FindRatioPara(p, n, m)
 }
 \arguments{
-\item{P}{minority class samples}
+\item{p}{minority class samples}
 
-\item{N}{majority class samples}
+\item{n}{majority class samples}
 
 \item{m}{m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15}
 }

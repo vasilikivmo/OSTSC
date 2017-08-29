@@ -4,7 +4,7 @@
 \alias{OSTSC}
 \title{Over Sampling for Time Series Classification}
 \usage{
-OSTSC(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5,
+OSTSC(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5,
   m = 15, parallel = TRUE, progBar = TRUE)
 }
 \arguments{
@@ -17,9 +17,9 @@ with the default setting to as most as possible.}
 
 \item{ratio}{Targeted positive samples number to achieve/negative samples number, with the default value 1}
 
-\item{Per}{Percentage of the mixing between ESPO and ADASYN, with the default value 0.8}
+\item{per}{Percentage of the mixing between ESPO and ADASYN, with the default value 0.8}
 
-\item{R}{An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
+\item{r}{An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
 with the default value 1}
 
 \item{k}{k-NN used in the ADASYN algorithm, with the default value 5}

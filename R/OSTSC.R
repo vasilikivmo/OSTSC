@@ -20,8 +20,8 @@
 #' @param class The number of the class which need to be oversampled, starting from the class with least observations, 
 #'              with the default setting to as most as possible. 
 #' @param ratio Targeted positive samples number to achieve/negative samples number, with the default value 1
-#' @param Per Percentage of the mixing between ESPO and ADASYN, with the default value 0.8
-#' @param R An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
+#' @param per Percentage of the mixing between ESPO and ADASYN, with the default value 0.8
+#' @param r An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
 #'          with the default value 1
 #' @param k k-NN used in the ADASYN algorithm, with the default value 5
 #' @param m m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15
@@ -56,7 +56,7 @@
 #' # check the imbalance of the data
 #' table(y)
 
-OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 15, parallel = TRUE, progBar = TRUE) {
+OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 15, parallel = TRUE, progBar = TRUE) {
   # Oversample a time series sequence imbalance data.
   #
   # Args:
@@ -66,8 +66,8 @@ OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 
   #                 with the default setting to as most as possible. 
   #   ratio:        Targeted positive samples number to achieve/negative samples number, 
   #                 with the default value 1.
-  #   Per:          Percentage of the mixing between ESPO and ADASYN, with the default value 0.8.
-  #   R:            An scalar ratio to tell in which level (towards the boundary) we shall push our 
+  #   per:          Percentage of the mixing between ESPO and ADASYN, with the default value 0.8.
+  #   r:            An scalar ratio to tell in which level (towards the boundary) we shall push our 
   #                 syntactic data in ESPO, with the default value 1.
   #   k:            k-NN used in the ADASYN algorithm, with the default value 5.
   #   m:            m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15.
@@ -107,13 +107,13 @@ OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 
   }    
   
   # check if the Percentage input is in the numeric format
-  if (!is.numeric(Per)) {
-    stop ("The parameter Per is not in correct format, which must be a numeric value.")
+  if (!is.numeric(per)) {
+    stop ("The parameter per is not in correct format, which must be a numeric value.")
   } 
   
-  # check if the R input is in the numeric format
-  if (!is.numeric(R)) {
-    stop ("The parameter R is not in correct format, which must be a numeric value.")
+  # check if the r input is in the numeric format
+  if (!is.numeric(r)) {
+    stop ("The parameter r is not in correct format, which must be a numeric value.")
   }
    
   # check if the k input is in the numeric format
@@ -136,14 +136,14 @@ OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 
     stop ("The parameter ratio is not in correct format, which must be a single value.")
   }
   
-  # check if the Per input is only one element
-  if (length(Per) != 1) {
-    stop ("The parameter Per is not in correct format, which must be a single value.")
+  # check if the per input is only one element
+  if (length(per) != 1) {
+    stop ("The parameter per is not in correct format, which must be a single value.")
   }
     
   # check if the R input is only one element
-  if (length(R) != 1) {
-    stop ("The parameter R is not in correct format, which must be a single value.")
+  if (length(r) != 1) {
+    stop ("The parameter r is not in correct format, which must be a single value.")
   }
     
   # check if the k input is only one element
@@ -162,13 +162,13 @@ OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 
   }
     
   # check if the Percentage input is in range [0,1]
-  if (Per > 1 || Per < 0) {
-    stop ("The parameter Per is not in correct range, which must be betwwen 0 to 1, including 0 and 1.")
+  if (per > 1 || per < 0) {
+    stop ("The parameter per is not in correct range, which must be betwwen 0 to 1, including 0 and 1.")
   }
     
   # check if the R input is in range [1,+oo)
-  if (R < 1) {
-    stop ("The parameter R is not in correct range, which must be larger or equal to 1.")
+  if (r < 1) {
+    stop ("The parameter r is not in correct range, which must be larger or equal to 1.")
   }
     
   # check if the k input is in range (0,+oo)
@@ -237,27 +237,27 @@ OSTSC <- function(sample, label, class, ratio = 1, Per = 0.8, R = 1, k = 5, m = 
   
   myData <- list()
   for (i in 1:class) {
-    target_class <- as.numeric(as.vector(claTab$Lab[i]))
-    newData <- ReguCovar(cleanData, target_class, ratio, R, Per, k, m, parallel, progBar)
+    targetClass <- as.numeric(as.vector(claTab$Lab[i]))
+    newData <- ReguCovar(cleanData, targetClass, ratio, r, per, k, m, parallel, progBar)
     myData <- rbind(myData, newData)
   }
   
   nData <- list()
   for (i in (class + 1):dim(claTab)[1]) {
-    target_class <- as.numeric(as.vector(claTab$Lab[i]))
-    nega <- cleanData[which(cleanData[, c(1)] == target_class), ]
+    targetClass <- as.numeric(as.vector(claTab$Lab[i]))
+    nega <- cleanData[which(cleanData[, c(1)] == targetClass), ]
     nData <- rbind(nData, nega)
   }
   
   # form data
-  data_new <- rbind(myData, nData)
-  data_new <- matrix(unlist(data_new), ncol=ncol(data_new))
+  dataNew <- rbind(myData, nData)
+  dataNew <- matrix(unlist(dataNew), ncol=ncol(dataNew))
   
-  data_x <- data_new[, -1]
-  data_y <- data_new[, c(1)]
-  data_list <- list("sample" = data_x, "label" = data_y)
+  dataX <- dataNew[, -1]
+  dataY <- dataNew[, c(1)]
+  dataList <- list("sample" = dataX, "label" = dataY)
   
-  return(data_list)
+  return(dataList)
 }
 
 

@@ -4,19 +4,19 @@
 \alias{ReguCovar}
 \title{Generate samples by ESPO and ADASYN.}
 \usage{
-ReguCovar(cleanData, target_class, ratio, R, Per, k, m, parallel, progBar)
+ReguCovar(cleanData, targetClass, ratio, r, per, k, m, parallel, progBar)
 }
 \arguments{
 \item{cleanData}{First column is label data, rest is sample data, without NA, NaN values}
 
-\item{target_class}{The class needs to be oversampled}
+\item{targetClass}{The class needs to be oversampled}
 
 \item{ratio}{Targeted positive samples number to achieve/negative samples number, with the default value 1.}
 
-\item{R}{An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data, 
+\item{r}{An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data, 
 with the default value 1}
 
-\item{Per}{Percentage of the mixing between ESPO and ADASYN, with the default value 0.8}
+\item{per}{Percentage of the mixing between ESPO and ADASYN, with the default value 0.8}
 
 \item{k}{k-NN used in the ADASYN algorithm, with the default value 5}
 

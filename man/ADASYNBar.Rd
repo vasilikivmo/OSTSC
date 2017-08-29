@@ -4,12 +4,12 @@
 \alias{ADASYNBar}
 \title{Generate samples by ADASYN approach.}
 \usage{
-ADASYNBar(P, N, nTarget, k, m)
+ADASYNBar(p, n, nTarget, k, m)
 }
 \arguments{
-\item{P}{minority class samples}
+\item{p}{minority class samples}
 
-\item{N}{majority class samples}
+\item{n}{majority class samples}
 
 \item{nTarget}{the targeted number of samples to achieve}
 
@@ -18,7 +18,7 @@ ADASYNBar(P, N, nTarget, k, m)
 \item{m}{m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15}
 }
 \value{
-sample_ada
+sampleADA
 }
 \description{
 Generate samples by ADASYN approach.

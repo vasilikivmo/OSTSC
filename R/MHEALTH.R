@@ -75,4 +75,5 @@
 MHEALTH <- function() {
   #load raw data
   MHEALTH <- rio::import("https://github.com/lweicdsor/GSoC2017/raw/master/MHEALTH/MHEALTH.rda")
+  return(MHEALTH)
 }
