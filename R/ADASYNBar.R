@@ -51,7 +51,7 @@ ADASYNBar <- function(p, n, nTarget, k, m) {
     }
     # data generation
     sampleADA <- list()
-    pb <- txtProgressBar(min = 0, max = length(No), style = 3)  # progress bar
+    pb <- txtProgressBar(min = 0, max = length(no), style = 3)  # progress bar
     
     for (i in 1:length(no)) {
       if (no[i] == 0) {  # jump the positive samples which don't need to be duplicated
