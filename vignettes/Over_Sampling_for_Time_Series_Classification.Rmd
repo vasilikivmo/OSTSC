@@ -281,7 +281,7 @@ The MHEALTH dataset is devised to benchmark techniques dealing with human behavi
 For example convenience, only subject 1-5 and feature 12 (magnetometer from the left-ankle sensor (X axis)) are used, and the dataset is reformated to binary class. Class 11 (Running) is set as positive, others as negative. The time series sequences length uses 30. Each sequence occurs in one line. The dataset has already split to training and testing data, feature and label data.
 
 ```{r}
-MHEALTH <- MHEALTH()
+MHEALTH <- OSTSC::MHEALTH()
 
 train.label <- MHEALTH$train.y
 train.sample <- MHEALTH$train.x
@@ -460,7 +460,7 @@ Let's see how the OSTSC performs on a high frequency trading dataset.
 The feature is from instantaneous liquidity imbalance using the best bid to ask ratio, up-tick as class 1, down-tick as class -1, and normal status as class 0. The time series sequences length is set to 10. For example convenience, the data using here is random selected from a real and giant size high frequency trading dataset. While the whole observations are ordered in the time order, the dataset haven't split training and setting data. The users can split it by any ratio they like. Here we split it by half and half. The first half observations are training data, while the rest are testing.
 
 ```{r}
-HFT <- HFT()
+HFT <- OSTSC::HFT()
 
 label <- HFT$y
 sample <- HFT$x
