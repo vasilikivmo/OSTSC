@@ -2,7 +2,7 @@
 #' 
 #' @param me Mean vector of positive class
 #' @param v Eigen axes matrix (Each axis is a column vector)
-#' @param d Modified Eigen Spectrum Value
+#' @param dMod Modified Eigen Spectrum Value
 #' @param p The minority class samples
 #' @param n The majority class samples
 #' @param r An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data, 
@@ -15,13 +15,13 @@
 #' @importFrom utils setTxtProgressBar txtProgressBar
 #' @keywords internal
 
-ESPOBar <- function(me, v, d, p, n, r, m, numToGen) {
+ESPOBar <- function(me, v, dMod, p, n, r, m, numToGen) {
   # Generate samples by ESPO.
   #
   # Args:
   #   me:       Mean vector of positive class.
   #   v:        Eigen axes matrix (Each axis is a column vector).
-  #   d:        Modified Eigen Spectrum Value.
+  #   dMod:        Modified Eigen Spectrum Value.
   #   p:        The minority class samples.
   #   n:        The majority class samples. P and N must have the same feature dimention, greater than one,
   #             with no missing values.

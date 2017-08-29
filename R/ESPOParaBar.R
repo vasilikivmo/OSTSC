@@ -96,7 +96,7 @@ ESPOParaBar <- function(me, v, dMod, p, n, r, m, numToGen) {
   # upon the density of the multivariate normal distribution, extract samples from generated ones by given R ratio
   for (i in 1:numToGen) {
     # tmp <- min(Prob)
-    ind <- which.min(Prob)
+    ind <- which.min(prob)
     prob[ind] <- Inf
     sampSel[i, ] <- sampGen[ind, ]
   }
