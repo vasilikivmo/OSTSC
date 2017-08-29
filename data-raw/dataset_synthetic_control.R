@@ -22,15 +22,16 @@ dataset_synthetic_control <- function() {
   data(synthetic_control_TRAIN)
   data(synthetic_control_TEST)
   # set imbalance to 1:10
-  train_x <- synthetic_control_TRAIN[46:300,][, -1]
-  train_y <- synthetic_control_TRAIN[46:300,][, c(1)]
-  test_x <- synthetic_control_TEST[, -1]
-  test_y <- synthetic_control_TEST[, c(1)]
+  train.x <- synthetic_control_TRAIN[46:300,][, -1]
+  train.y <- synthetic_control_TRAIN[46:300,][, c(1)]
+  test.x <- synthetic_control_TEST[, -1]
+  test.y <- synthetic_control_TEST[, c(1)]
   # transform format to numpy array
-  train_x <- matrix(unlist(train_x), ncol = ncol(train_x))
-  test_x <- matrix(unlist(test_x), ncol = ncol(test_x))
+  train.x <- matrix(unlist(train.x), ncol = ncol(train.x))
+  test.x <- matrix(unlist(test.x), ncol = ncol(test.x))
   # form data
-  synthetic_control <- list("train_x" = train_x, "train_y" = train_y, "test_x" = test_x, "test_y" = test_y)
+  synthetic_control <- list("train.x" = train.x, "train.y" = train.y, 
+                            "test.x" = test.x, "test.y" = test.y)
   # save data
   devtools::use_data(synthetic_control)
 }
