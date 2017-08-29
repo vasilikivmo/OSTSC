@@ -55,16 +55,16 @@ structure preserving oversampling.
 # loading data
 data(synthetic_control)
 # get split feature and label data 
-train_label <- synthetic_control$train_y
-train_sample <- synthetic_control$train_x
+train.label <- synthetic_control$train.y
+train.sample <- synthetic_control$train.x
 # the first dimension of feature and label shall be the same
 # the second dimention of feature is the time sequence length
-dim(train_sample)
-dim(train_label)
+dim(train.sample)
+dim(train.label)
 # check the imbalance of the data
-table(train_label)
+table(train.label)
 # oversample the class 1 to the same amount of class 0
-MyData <- OSTSC(train_sample, train_label, parallel = FALSE)
+MyData <- OSTSC(train.sample, train.label, parallel = FALSE, k = 4)
 # store the feature data after oversampling
 x <- MyData$sample
 # store the label data after oversampling
