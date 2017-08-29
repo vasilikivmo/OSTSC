@@ -4,14 +4,14 @@
 \alias{ESPOBar}
 \title{Generate samples by ESPO algorithm.}
 \usage{
-ESPOBar(me, v, d, p, n, r, m, numToGen)
+ESPOBar(me, v, dMod, p, n, r, m, numToGen)
 }
 \arguments{
 \item{me}{Mean vector of positive class}
 
 \item{v}{Eigen axes matrix (Each axis is a column vector)}
 
-\item{d}{Modified Eigen Spectrum Value}
+\item{dMod}{Modified Eigen Spectrum Value}
 
 \item{p}{The minority class samples}
 
