@@ -61,12 +61,12 @@ ReguCovar <- function(cleanData, targetClass, ratio, r, per, k, m, parallel, pro
     # v <- v[, n:1]
     d <- eigen(pCov)$values  # Eigenvalues
     # d <- d[n:1]
-    n <- ncol(p)  # The feature dimension
+    numD <- ncol(p)  # The feature dimension
     ind <- which(d <= 0.005)  # The unreliable eigenvalues
     if (length(ind) != 0) {
       por <- ind[1]  # [1,por] the portion of reliable
     } else {
-      por <- n
+      por <- numD
     }
     tCov  <- cov(rbind(p, n))  # The covariance matrix of the total data (column)
     dT <- crossprod(v, tCov) %*% v  # dT = v' * tCov * v
@@ -74,10 +74,10 @@ ReguCovar <- function(cleanData, targetClass, ratio, r, per, k, m, parallel, pro
     
     # Modify the Eigen spectrum according to a 1-Parameter Model
     # dMod: Modified Eigen Spectrum Value
-    dMod <- matrix(0, 1, n)
+    dMod <- matrix(0, 1, numD)
     alpha <- d[1]*d[por]*(por-1)/(d[1] - d[por])
     beta  <- (por*d[por] - d[1])/(d[1] - d[por])
-    for (i in 1:n) {
+    for (i in 1:numD) {
       if (i < por) {
         dMod[i] <- d[i]
       } else {
