@@ -80,7 +80,7 @@ table(train.label)
 This is a simple example to show how to oversample the class 1 to the same amount of class 0, and export the sample and label from oversampled data. There are ten parameters in the OSTSC function, the details of them can be read in the help documents. Users only need to input at least first three variables to be able to call the function. 
 
 ```{r, results='hide'}
-MyData <- OSTSC(train.sample, train.label, k = 4)
+MyData <- OSTSC(train.sample, train.label, parallel = FALSE, k = 4)
 over.sample <- MyData$sample
 over.label <- MyData$label
 ```
@@ -298,7 +298,7 @@ table(train.label)
 After Oversampling by OSTSC, the positive data and negative data are balanced.
 
 ```{r, results='hide'}
-MyData <- OSTSC(train.sample, train.label)
+MyData <- OSTSC(train.sample, train.label, parallel = FALSE)
 over.sample <- MyData$sample
 over.label <- MyData$label
 
@@ -479,7 +479,7 @@ table(train.label)
 The OSTSC function deals with multi-class classification, so the oversampling could apply on one or two classes. If running on only one class, the class with least observations would be chosen. The oversampling is formed using one-vs-rest manner.
 
 ```{r, results='hide'}
-MyData <- OSTSC(train.sample, train.label)
+MyData <- OSTSC(train.sample, train.label, parallel = FALSE)
 over.sample <- MyData$sample
 over.label <- MyData$label
 ```
