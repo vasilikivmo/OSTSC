@@ -16,7 +16,7 @@ A significant number of machine learning problems require the accurate classific
 
 OSTSC oversamples the minority classes using structure preserving oversampling. This approach has been shown to outperform other sampling approaches such as undersampling the majority class, oversampling the minority class, and SMOTE^[H. Cao, X.-L. Li, Y.-K. Woon and S.-K. Ng, Integrated Oversampling for Imbalanced Time Series Classification. 2013]. 
 
-This version of the package currently only supports univariant, binary, classification of time series. The extension to multi-features requires tensor computations which are not implemented here.
+This version of the package currently only supports univariant, classification of time series. The extension to multi-features requires tensor computations which are not implemented here.
 
 ## Background
 
@@ -278,10 +278,10 @@ This is a simple example on a small size dataset. Let's move to a more complex d
 ### The MHEALTH dataset
 
 The MHEALTH dataset is devised to benchmark techniques dealing with human behavior analysis based on multimodal body sensing. ([via](https://http://archive.ics.uci.edu/ml/datasets/mhealth+dataset)).^[Banos, O., Garcia, R., Holgado, J. A., Damas, M., Pomares, H., Rojas, I., Saez, A., Villalonga, C. mHealthDroid: a novel framework for agile development of mobile health applications. Proceedings of the 6th International Work-conference on Ambient Assisted Living an Active Ageing (IWAAL 2014), Belfast, Northern Ireland, December 2-5, (2014)] 
-For example convenience, only subject 1-5 and feature 12 (magnetometer from the left-ankle sensor (X axis)) are used, and the dataset is reformated to binary class. Class 11 (Running) is set as positive, others as negative. The time series sequences length uses 30. Each sequence occurs in one line. The dataset has already split to training and testing data, feature and label data.
+For example convenience, only subject 1-5 and feature 12 (magnetometer from the left-ankle sensor (X axis)) are used, and the dataset is reformated to binary class. Class 11 (Running) is set as positive, others as negative. The time series sequences length uses 30. Each sequence occurs in one line. The dataset has already split to training and testing data, feature and label data. It stores on github, so its loading method is different from synthetic control data.
 
 ```{r}
-data(MHEALTH)
+MHEALTH <- MHEALTH()
 
 train_label <- MHEALTH$train_y
 train_sample <- MHEALTH$train_x
@@ -457,10 +457,10 @@ Let's see how the OSTSC performs on a high frequency trading dataset.
 
 ### The high frequency trading dataset
 
-The feature is from instantaneous liquidity imbalance using the best bid to ask ratio, up-tick as class 1, down-tick as class -1, and normal status as class 0. The time series sequences length is set to 10. For example convenience, the data using here is random selected from a real and giant size high frequency trading dataset. While the whole observations are ordered in the time order, the dataset haven't split training and setting data. The users can split it by any ratio they like. Here we split it by half and half. The first half observations are training data, while the rest are testing.
+The feature is from instantaneous liquidity imbalance using the best bid to ask ratio, up-tick as class 1, down-tick as class -1, and normal status as class 0. The time series sequences length is set to 10. For example convenience, the data using here is random selected from a real and giant size high frequency trading dataset. While the whole observations are ordered in the time order, the dataset haven't split training and setting data. The users can split it by any ratio they like. Here we split it by half and half. The first half observations are training data, while the rest are testing. Its loading method is same with MHEALTH data for their similar sizes.
 
 ```{r}
-data(HFT)
+HFT <- HFT ()
 
 label <- HFT$y
 sample <- HFT$x
@@ -559,8 +559,8 @@ lstm_after <- model_over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
-pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_predlabel.rdata')
 
 pred_label_over <- as.vector(unlist(pred_label_over))
 plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))

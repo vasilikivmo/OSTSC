@@ -1,7 +1,7 @@
 ## ---- echo=FALSE, message=FALSE------------------------------------------
 require(OSTSC)
 require(keras)
-require(rlist)
+require(rio)
 require(dummies)
 require(pROC)
 
@@ -54,11 +54,13 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #  plot(lstm_before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-score <- rlist::list.load('/home/lwei/sc_before_score.rdata')
-lstm_before <- rlist::list.load('/home/lwei/sc_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/sc_before_predlabel.rdata')
+score <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_score.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_predlabel.rdata')
+
+score <- as.vector(unlist(score))
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  score <- model %>% evaluate(test_x, test_y)
@@ -93,11 +95,13 @@ over_x <- array(over_sample, dim = c(dim(over_sample),1))
 #  plot(lstm_after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-score_over <- rlist::list.load('/home/lwei/sc_after_score.rdata')
-lstm_after <- rlist::list.load('/home/lwei/sc_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/sc_after_predlabel.rdata')
+score_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_score.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_predlabel.rdata')
+
+score_over <- as.vector(unlist(score_over))
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  score_over <- model_over %>% evaluate(test_x, test_y)
@@ -174,7 +178,7 @@ legend("bottomright", legend=c("Before Oversampling", "After Oversampling"),
        col=c("blue", "red"), lwd=2, cex= .6)
 
 ## ------------------------------------------------------------------------
-data(MHEALTH)
+MHEALTH <- MHEALTH()
 
 train_label <- MHEALTH$train_y
 train_sample <- MHEALTH$train_x
@@ -220,10 +224,11 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #  plot(lstm_before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_before <- rlist::list.load('/home/lwei/mhealth_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/mhealth_before_predlabel.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_predlabel.rdata')
+
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 
 ## ------------------------------------------------------------------------
 over_y <- to_categorical(over_label)
@@ -251,10 +256,11 @@ over_x <- array(over_sample, dim = c(dim(over_sample),1))
 #  plot(lstm_after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_after <- rlist::list.load('/home/lwei/mhealth_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/mhealth_after_predlabel.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
+
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  pred_label <- model %>% predict_classes(test_x)
@@ -324,7 +330,7 @@ legend("bottomright", legend=c("Before Oversampling", "After Oversampling"),
        col=c("blue", "red"), lwd=2, cex= .6)
 
 ## ------------------------------------------------------------------------
-data(HFT)
+HFT <- HFT ()
 
 label <- HFT$y
 sample <- HFT$x
@@ -374,10 +380,11 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #  plot(lstm_before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_before <- rlist::list.load('/home/lwei/HFT_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/HFT_before_predlabel.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_predlabel.rdata')
+
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 
 ## ------------------------------------------------------------------------
 over_y <- dummy(over_label)
@@ -405,10 +412,11 @@ over_x <- array(over_sample, dim = c(dim(over_sample),1))
 #  plot(lstm_after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_after <- rlist::list.load('/home/lwei/HFT_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/HFT_after_predlabel.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_predlabel.rdata')
+
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
 #  pred_label <- model %>% predict_classes(test_x)
