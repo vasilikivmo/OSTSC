@@ -5,18 +5,37 @@ Author: Matthew Dixon [ctb],
     Diego Klabjan [ctb],
     Lan Wei [aut, trl, cre]
 Maintainer: Lan Wei <lweicdsor@gmail.com>
-Description: Oversampling of imbalanced univariate time series classification data using
-    integrated ESPO and ADASYN methods. This code is ported from a matlab implementation by Cao et al. [2011] and adapted for use with Recurrent Neural Networks.
-Depends: R (>= 3.2.3)
+Description: Oversampling of imbalanced univariate time series classification
+    data using integrated ESPO and ADASYN methods. This code is ported from a matlab
+    implementation by Cao et al. [2011] and adapted for use with Recurrent Neural
+    Networks.
+Depends:
+    R (>= 3.2.3)
 License: GPL-3
 URL: https://github.com/lweicdsor/OSTSC
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
-Imports: fields, MASS, stats, utils, parallel, doParallel, doSNOW,
-        foreach
-Suggests: knitr, rmarkdown, keras, dummies, rlist, pROC, devtools,
-        testthat, xts, rio
+RoxygenNote: 5.0.1
+Imports:
+    fields,
+    MASS,
+    stats,
+    utils,
+    parallel,
+    doParallel,
+    doSNOW,
+    foreach
+Suggests:
+    knitr,
+    rmarkdown,
+    keras,
+    dummies,
+    rlist,
+    pROC,
+    devtools,
+    testthat,
+    xts,
+    rio
 VignetteBuilder: knitr
 NeedsCompilation: no
 Packaged: 2017-08-28 15:31:33 UTC; lwei

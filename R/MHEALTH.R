@@ -1,13 +1,12 @@
-#' MHEALTH Dataset Data Set
+#' @title MHEALTH Dataset Data Set
 #'
-#' The MHEALTH (Mobile Health) dataset is devised to benchmark techniques dealing with human behavior 
-#' analysis based on multimodal body sensing. comprises body motion and vital signs recordings for 
-#' ten volunteers of diverse profile while performing several physical activities. Sensors placed on 
-#' the subject's chest, right wrist and left ankle are used to measure the motion experienced by 
-#' diverse body parts, namely, acceleration, rate of turn and magnetic field orientation. The sensor 
-#' positioned on the chest also provides 2-lead ECG measurements, which can be potentially used for 
-#' basic heart monitoring, checking for various arrhythmias or looking at the effects of exercise on 
-#' the ECG.
+#' @description The MHEALTH (Mobile Health) dataset is devised to benchmark techniques dealing with human behavior 
+#' analysis based on multimodal body sensing. 
+#' @details It comprises body motion and vital signs recordings for ten volunteers of diverse profile while performing 
+#' several physical activities. Sensors placed on the subject's chest, right wrist and left ankle are used to measure 
+#' the motion experienced by diverse body parts, namely, acceleration, rate of turn and magnetic field orientation. 
+#' The sensor positioned on the chest also provides 2-lead ECG measurements, which can be potentially used for basic 
+#' heart monitoring, checking for various arrhythmias or looking at the effects of exercise on the ECG.
 #'
 #' @format A time series data with multi-classes and multi-features. 
 #' \describe{
@@ -60,10 +59,9 @@
 #'   others as negative. The time series sequences length uses 30. Each sequence occurs in one line.
 #' }
 #' 
-#' @docType data
-#' @keywords datasets
-#' @name MHEALTH
-#' @usage data(MHEALTH)
+#' @return MHEALTH: MHEALTH dataset
+#' @export MHEALTH
+#' @usage MHEALTH()
 #' @references Banos, O., Garcia, R., Holgado, J. A., Damas, M., Pomares, H., Rojas, I., Saez, A., Villalonga, C. 
 #'             mHealthDroid: a novel framework for agile development of mobile health applications. 
 #'             Proceedings of the 6th International Work-conference on Ambient Assisted Living an Active Ageing (IWAAL 2014), 
