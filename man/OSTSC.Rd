@@ -12,22 +12,27 @@ OSTSC(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5,
 
 \item{label}{Labels corresponding to samples}
 
-\item{class}{The number of the class which need to be oversampled, starting from the class with least observations, 
-with the default setting to as most as possible.}
+\item{class}{The number of the class which need to be oversampled, starting 
+from the class with least observations, with the default setting 
+to as most as possible.}
 
-\item{ratio}{Targeted positive samples number to achieve/negative samples number, with the default value 1}
+\item{ratio}{Targeted positive samples number to achieve/negative samples 
+number, with the default value 1}
 
-\item{per}{Percentage of the mixing between ESPO and ADASYN, with the default value 0.8}
+\item{per}{Percentage of the mixing between ESPO and ADASYN, with the default 
+value 0.8}
 
-\item{r}{An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
-with the default value 1}
+\item{r}{An scalar ratio to tell in which level (towards the boundary) we shall 
+push our syntactic data in ESPO, with the default value 1}
 
 \item{k}{k-NN used in the ADASYN algorithm, with the default value 5}
 
-\item{m}{m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15}
+\item{m}{m-NN used in ADASYN, finding seeds from the Positive Class, with the 
+default value 15}
 
 \item{parallel}{Whether to run in parallel, with the default setting TRUE. 
-(Recommend for dataset with over 30,000 records. The using cores is 1 less than the total cores)}
+(Recommend for dataset with over 30,000 records. The using cores 
+is 1 less than the total cores)}
 
 \item{progBar}{Whether to include progress bars, with the default setting TRUE.
 For ESPO approach, the bar charactor is |--------|100\%. 
@@ -42,7 +47,8 @@ label: the label corresponding to each row of records
 Oversample a time series sequence imbalance data.
 }
 \details{
-This function balances univariate imbalance time series data based on structure preserving oversampling.
+This function balances univariate imbalance time series data based on 
+structure preserving oversampling.
 }
 \examples{
 # This is a simple example to show the usage. A more complex example is inside the vignette.
