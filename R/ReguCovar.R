@@ -87,7 +87,8 @@ ReguCovar <- function(cleanData, targetClass, ratio, r, per, k, m, parallel, pro
         }
       }
     }
-    # Create Oversampled Data by ESPO and ADASYN, users choose if applying in parallel and if adding progress bar
+    # Create Oversampled Data by ESPO and ADASYN
+    # Users choose if applying in parallel and if adding progress bar
     if (numToGen != 0) {
       if (identical(parallel, FALSE)) {
         if (identical(progBar, FALSE)) {

@@ -1,6 +1,7 @@
 #' @title Over Sampling for Time Series Classification
 #' @description Oversample a time series sequence imbalance data.
-#' @details This function balances univariate imbalance time series data based on structure preserving oversampling. 
+#' @details This function balances univariate imbalance time series data based on 
+#' structure preserving oversampling. 
 #' @references H. Cao, X.-L. Li, Y.-K. Woon and S.-K. Ng, 
 #'             "Integrated Oversampling for Imbalanced Time Series Classification" 
 #'             IEEE Trans. on Knowledge and Data Engineering (TKDE), 
@@ -17,16 +18,21 @@
 #'             pp. 1008-1013, 2011
 #' @param sample Univariate sequence data samples
 #' @param label Labels corresponding to samples
-#' @param class The number of the class which need to be oversampled, starting from the class with least observations, 
-#'              with the default setting to as most as possible. 
-#' @param ratio Targeted positive samples number to achieve/negative samples number, with the default value 1
-#' @param per Percentage of the mixing between ESPO and ADASYN, with the default value 0.8
-#' @param r An scalar ratio to tell in which level (towards the boundary) we shall push our syntactic data in ESPO, 
-#'          with the default value 1
+#' @param class The number of the class which need to be oversampled, starting 
+#'              from the class with least observations, with the default setting 
+#'              to as most as possible. 
+#' @param ratio Targeted positive samples number to achieve/negative samples 
+#'              number, with the default value 1
+#' @param per Percentage of the mixing between ESPO and ADASYN, with the default 
+#'            value 0.8
+#' @param r An scalar ratio to tell in which level (towards the boundary) we shall 
+#'          push our syntactic data in ESPO, with the default value 1
 #' @param k k-NN used in the ADASYN algorithm, with the default value 5
-#' @param m m-NN used in ADASYN, finding seeds from the Positive Class, with the default value 15
+#' @param m m-NN used in ADASYN, finding seeds from the Positive Class, with the 
+#'          default value 15
 #' @param parallel Whether to run in parallel, with the default setting TRUE. 
-#'                 (Recommend for dataset with over 30,000 records. The using cores is 1 less than the total cores)
+#'                 (Recommend for dataset with over 30,000 records. The using cores 
+#'                 is 1 less than the total cores)
 #' @param progBar Whether to include progress bars, with the default setting TRUE.
 #'                For ESPO approach, the bar charactor is |--------|100\%. 
 #'                For ADASYN approach, the bar charactor is |========|100\%.
@@ -56,7 +62,8 @@
 #' # check the imbalance of the data
 #' table(y)
 
-OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 15, parallel = TRUE, progBar = TRUE) {
+OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, 
+                  m = 15, parallel = TRUE, progBar = TRUE) {
   # Oversample a time series sequence imbalance data.
   #
   # Args:
@@ -92,8 +99,8 @@ OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 
     sizeSample <- dim(sample)[1]
   
   if (sizeLabel != sizeSample) {
-    stop ("Number of time series sequences provided in sample do not match the number of classes provided 
-          in label. Check dimensions.")
+    stop ("Number of time series sequences provided in sample do not match the 
+          number of classes provided in label. Check dimensions.")
   }
   
   # check if the class input is in the numeric format
@@ -158,17 +165,20 @@ OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 
   
   # check if the ratio input is in range (0,1]
   if (ratio > 1 || ratio <= 0) {
-    stop ("The parameter ratio is not in correct range, which must be betwwen 0 to 1, including 1.")
+    stop ("The parameter ratio is not in correct range, which must be betwwen 
+          0 to 1, including 1.")
   }
     
   # check if the Percentage input is in range [0,1]
   if (per > 1 || per < 0) {
-    stop ("The parameter per is not in correct range, which must be betwwen 0 to 1, including 0 and 1.")
+    stop ("The parameter per is not in correct range, which must be betwwen 
+          0 to 1, including 0 and 1.")
   }
     
   # check if the R input is in range [1,+oo)
   if (r < 1) {
-    stop ("The parameter r is not in correct range, which must be larger or equal to 1.")
+    stop ("The parameter r is not in correct range, which must be larger or 
+          equal to 1.")
   }
     
   # check if the k input is in range (0,+oo)
@@ -193,20 +203,24 @@ OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 
     
   # check if the parallel input is a boolean value
   if (!(identical(parallel, FALSE) || identical(parallel, TRUE))) {
-    stop ("The parameter parallel is not in correct format, which must be a boolean value.")
+    stop ("The parameter parallel is not in correct format, which must be a 
+          boolean value.")
   }
   
   # check if the progBar input is a boolean value
   if (!(identical(progBar, FALSE) || identical(progBar, TRUE))) {
-    stop ("The parameter progBar is not in correct format, which must be a boolean value.")
+    stop ("The parameter progBar is not in correct format, which must be a 
+          boolean value.")
   }
   
   # combine labels and features
   fullData <- cbind(label, sample)
-  fullData <- matrix(unlist(fullData, use.names = FALSE), ncol = ncol(fullData))
+  fullData <- matrix(unlist(fullData, use.names = FALSE), 
+                     ncol = ncol(fullData))
   
   # clean missing values and non-number values by removing their belonging rows
-  fullData <- matrix(suppressWarnings(as.numeric(fullData)), nrow = nrow(fullData))
+  fullData <- matrix(suppressWarnings(as.numeric(fullData)), 
+                     nrow = nrow(fullData))
   cleanData <- na.omit(fullData)
   
   # determine how many classes need to be oversampled
@@ -232,13 +246,15 @@ OSTSC <- function(sample, label, class, ratio = 1, per = 0.8, r = 1, k = 5, m = 
   } 
   
   if (count < class) {
-    warning ("No enough minority classes, class number need to be oversampled is set to ", count)
+    warning ("No enough minority classes, class number need to be oversampled 
+             is set to ", count)
   }
   
   myData <- list()
   for (i in 1:class) {
     targetClass <- as.numeric(as.vector(claTab$Lab[i]))
-    newData <- ReguCovar(cleanData, targetClass, ratio, r, per, k, m, parallel, progBar)
+    newData <- ReguCovar(cleanData, targetClass, ratio, r, per, k, m, 
+                         parallel, progBar)
     myData <- rbind(myData, newData)
   }
   
