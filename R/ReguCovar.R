@@ -45,9 +45,9 @@ ReguCovar <- function(cleanData, targetClass, ratio, r, per, k, m, parallel, pro
   n <- negative[, -1]
   
   # Number of sequences needed to be created
-  nTarget <- nrow(N)*ratio
+  nTarget <- nrow(n)*ratio
   
-  poscnt <- nrow(P)
+  poscnt <- nrow(p)
   if (nTarget > poscnt) { 
     # check if the positive data records have already more than the records asked to be created
     
