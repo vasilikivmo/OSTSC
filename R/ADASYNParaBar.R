@@ -54,7 +54,7 @@ ADASYNParaBar <- function(p, n, nTarget, k, m) {
       }
     }
     # data generation
-    nlen <- length(No)  # number of positive samples 
+    nlen <- length(no)  # number of positive samples 
     i <- 0
     cl <- makeCluster(detectCores(logical = FALSE) - 1)  # start parallel
     registerDoSNOW(cl)

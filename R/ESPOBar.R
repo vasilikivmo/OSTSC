@@ -56,7 +56,7 @@ ESPOBar <- function(me, v, dMod, p, n, r, m, numToGen) {
       aR <- mvrnorm(1, muR, sigmaR)  # generate random vectors from the multivariate normal distribution
       dens <- exp(-0.5*sum(aR^2) - length(aR)*log(2*pi)/2)  # the density of the multivariate normal distribution
     
-      if (Un > 0) {
+      if (un > 0) {
         aU <- mvrnorm(1, muU, sigmaU)
         a <- c(aR, aU)*dd  # The vector in Eigen transformed domain
       } else {
