@@ -1,7 +1,7 @@
 # OSTSC
 Over sampling for time series classification. 
 
-This package is an achievement for Google Summer of Code 2017. This is a package balances the univariate imbalance time series data. There are some more supporting material for explanation located in respository GSoC2017 (https://github.com/lweicdsor/GSoC2017). This repository is considered a complete package which could be installed and used. I have tested it on Windows & Linux system.
+This package is an achievement for Google Summer of Code 2017. This is a package balances the univariate imbalance time series data. There are some more supporting material for explanation located in respository GSoC2017 (https://github.com/lweicdsor/GSoC2017). This repository is considered a complete package which could be installed and used. I have tested it on Windows & Linux system. The vignettes could have more details on mathematics theory. It would be do later after the project.
 
 # Installation
 ```java
