@@ -9,35 +9,35 @@ require(pROC)
 library(OSTSC)
 data(synthetic_control)
 
-train_label <- synthetic_control$train_y
-train_sample <- synthetic_control$train_x
-test_label <- synthetic_control$test_y
-test_sample <- synthetic_control$test_x
+train.label <- synthetic_control$train.y
+train.sample <- synthetic_control$train.x
+test.label <- synthetic_control$test.y
+test.sample <- synthetic_control$test.x
 
 ## ------------------------------------------------------------------------
-table(train_label)
+table(train.label)
 
 ## ---- results='hide'-----------------------------------------------------
-MyData <- OSTSC(train_sample, train_label, k = 4)
-over_sample <- MyData$sample
-over_label <- MyData$label
+MyData <- OSTSC(train.sample, train.label, k = 4)
+over.sample <- MyData$sample
+over.label <- MyData$label
 
 ## ------------------------------------------------------------------------
-table(over_label)
+table(over.label)
 
 ## ------------------------------------------------------------------------
 library(keras)
-train_y <- to_categorical(train_label)
-test_y <- to_categorical(test_label)
-train_x <- array(train_sample, dim = c(dim(train_sample),1)) 
-test_x <- array(test_sample, dim = c(dim(test_sample),1)) 
+train.y <- to_categorical(train.label)
+test.y <- to_categorical(test.label)
+train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
+test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model = keras_model_sequential()
+#  model <- keras_model_sequential()
 #  model %>%
-#    layer_lstm(10, input_shape = c(dim(train_x)[2], dim(train_x)[3])) %>%
+#    layer_lstm(10, input_shape = c(dim(train.x)[2], dim(train.x)[3])) %>%
 #    layer_dropout(rate = 0.2) %>%
-#    layer_dense(dim(train_y)[2]) %>%
+#    layer_dense(dim(train.y)[2]) %>%
 #    layer_dropout(rate = 0.2) %>%
 #    layer_activation("softmax")
 #  model %>% compile(
@@ -45,78 +45,78 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_before <- model %>% fit(
-#    x = train_x,
-#    y = train_y,
+#  lstm.before <- model %>% fit(
+#    x = train.x,
+#    y = train.y,
 #    validation_split = 0.1,
 #    epochs = 200
 #  )
-#  plot(lstm_before)
+#  plot(lstm.before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
 score <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_score.rdata')
-lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_e200.rdata')
-pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_predlabel.rdata')
+lstm.before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_e200.rdata')
+pred.label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_predlabel.rdata')
 
 score <- as.vector(unlist(score))
-pred_label <- as.vector(unlist(pred_label))
-plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
+pred.label <- as.vector(unlist(pred.label))
+plot(structure(class = "keras_training_history", list(params = lstm.before$params, metrics = lstm.before$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  score <- model %>% evaluate(test_x, test_y)
+#  score <- model %>% evaluate(test.x, test.y)
 
 ## ---- echo=FALSE---------------------------------------------------------
 cat("The loss value is", unlist(score[1]), ".\n")
 cat("The metric value (in this case 'accuracy') is", unlist(score[2]), ".\n")
 
 ## ------------------------------------------------------------------------
-over_y <- to_categorical(over_label)
-over_x <- array(over_sample, dim = c(dim(over_sample),1)) 
+over.y <- to_categorical(over.label)
+over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model_over = keras_model_sequential()
-#  model_over %>%
-#    layer_lstm(10, input_shape = c(dim(over_x)[2], dim(over_x)[3])) %>%
+#  model.over <- keras_model_sequential()
+#  model.over %>%
+#    layer_lstm(10, input_shape = c(dim(over.x)[2], dim(over.x)[3])) %>%
 #    layer_dropout(rate = 0.1) %>%
-#    layer_dense(dim(over_y)[2]) %>%
+#    layer_dense(dim(over.y)[2]) %>%
 #    layer_dropout(rate = 0.1) %>%
 #    layer_activation("softmax")
-#  model_over %>% compile(
+#  model.over %>% compile(
 #    loss = "categorical_crossentropy",
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_after <- model_over %>% fit(
-#    x = over_x,
-#    y = over_y,
+#  lstm.after <- model.over %>% fit(
+#    x = over.x,
+#    y = over.y,
 #    validation_split = 0.1,
 #    epochs = 200
 #  )
-#  plot(lstm_after)
+#  plot(lstm.after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-score_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_score.rdata')
-lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_e200.rdata')
-pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_predlabel.rdata')
+score.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_score.rdata')
+lstm.after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_e200.rdata')
+pred.label.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_predlabel.rdata')
 
-score_over <- as.vector(unlist(score_over))
-pred_label_over <- as.vector(unlist(pred_label_over))
-plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
+score.over <- as.vector(unlist(score.over))
+pred.label.over <- as.vector(unlist(pred.label.over))
+plot(structure(class = "keras_training_history", list(params = lstm.after$params, metrics = lstm.after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  score_over <- model_over %>% evaluate(test_x, test_y)
+#  score.over <- model.over %>% evaluate(test.x, test.y)
 
 ## ---- echo=FALSE---------------------------------------------------------
-cat("The loss value is", unlist(score_over[1]), ".\n")
-cat("The metric value (in this case 'accuracy') is", unlist(score_over[2]), ".\n")
+cat("The loss value is", unlist(score.over[1]), ".\n")
+cat("The metric value (in this case 'accuracy') is", unlist(score.over[2]), ".\n")
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  pred_label <- model %>% predict_classes(test_x)
-#  pred_label_over <- model_over %>% predict_classes(test_x)
+#  pred.label <- model %>% predict_classes(test.x)
+#  pred.label.over <- model.over %>% predict_classes(test.x)
 
 ## ------------------------------------------------------------------------
-cm_before <- table(test_label, pred_label)
-cm_after <- table(test_label, pred_label_over)
+cm.before <- table(test.label, pred.label)
+cm.after <- table(test.label, pred.label.over)
 
 ## ---- echo=FALSE---------------------------------------------------------
 layout(matrix(c(1,1,2)))
@@ -135,7 +135,7 @@ text(245, 450, 'Predicted', cex=1.3, font=2)
 text(140, 400, '0', cex=1.2, srt=90)
 text(140, 335, '1', cex=1.2, srt=90)
 
-res <- as.numeric(cm_before)
+res <- as.numeric(cm.before)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
 text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
@@ -159,7 +159,7 @@ text(245, 450, 'Predicted', cex=1.3, font=2)
 text(140, 400, '0', cex=1.2, srt=90)
 text(140, 335, '1', cex=1.2, srt=90)
 
-res <- as.numeric(cm_after)
+res <- as.numeric(cm.after)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
 text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
@@ -169,45 +169,45 @@ text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
 
 ## ------------------------------------------------------------------------
 library(pROC)
-plot.roc(test_label, pred_label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
+plot.roc(test.label, pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
          print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
          main="ROC synthetic_control")
-plot.roc(test_label, pred_label_over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
+plot.roc(test.label, pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 
 ## ------------------------------------------------------------------------
-MHEALTH <- MHEALTH()
+MHEALTH <- OSTSC::MHEALTH()
 
-train_label <- MHEALTH$train_y
-train_sample <- MHEALTH$train_x
-test_label <- MHEALTH$test_y
-test_sample <- MHEALTH$test_x
+train.label <- MHEALTH$train.y
+train.sample <- MHEALTH$train.x
+test.label <- MHEALTH$test.y
+test.sample <- MHEALTH$test.x
 
 ## ------------------------------------------------------------------------
-table(train_label)
+table(train.label)
 
 ## ---- results='hide'-----------------------------------------------------
-MyData <- OSTSC(train_sample, train_label)
-over_sample <- MyData$sample
-over_label <- MyData$label
+MyData <- OSTSC(train.sample, train.label)
+over.sample <- MyData$sample
+over.label <- MyData$label
 
-table(over_label)
+table(over.label)
 
 ## ------------------------------------------------------------------------
 library(keras)
-train_y <- to_categorical(train_label)
-test_y <- to_categorical(test_label)
-train_x <- array(train_sample, dim = c(dim(train_sample),1)) 
-test_x <- array(test_sample, dim = c(dim(test_sample),1)) 
+train.y <- to_categorical(train.label)
+test.y <- to_categorical(test.label)
+train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
+test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model = keras_model_sequential()
+#  model <- keras_model_sequential()
 #  model %>%
-#    layer_lstm(10, input_shape = c(dim(train_x)[2], dim(train_x)[3])) %>%
+#    layer_lstm(10, input_shape = c(dim(train.x)[2], dim(train.x)[3])) %>%
 #    layer_dropout(rate = 0.2) %>%
-#    layer_dense(dim(train_y)[2]) %>%
+#    layer_dense(dim(train.y)[2]) %>%
 #    layer_dropout(rate = 0.2) %>%
 #    layer_activation("softmax")
 #  model %>% compile(
@@ -215,31 +215,31 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_before <- model %>% fit(
-#    x = train_x,
-#    y = train_y,
+#  lstm.before <- model %>% fit(
+#    x = train.x,
+#    y = train.y,
 #    validation_split = 0.2,
 #    epochs = 200
 #  )
-#  plot(lstm_before)
+#  plot(lstm.before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_e200.rdata')
-pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_predlabel.rdata')
+lstm.before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_e200.rdata')
+pred.label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_predlabel.rdata')
 
-pred_label <- as.vector(unlist(pred_label))
-plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
+pred.label <- as.vector(unlist(pred.label))
+plot(structure(class = "keras_training_history", list(params = lstm.before$params, metrics = lstm.before$metrics)))
 
 ## ------------------------------------------------------------------------
-over_y <- to_categorical(over_label)
-over_x <- array(over_sample, dim = c(dim(over_sample),1)) 
+over.y <- to_categorical(over.label)
+over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model_over = keras_model_sequential()
-#  model_over %>%
-#    layer_lstm(10, input_shape = c(dim(over_x)[2], dim(over_x)[3])) %>%
+#  model.over <- keras_model_sequential()
+#  model.over %>%
+#    layer_lstm(10, input_shape = c(dim(over.x)[2], dim(over.x)[3])) %>%
 #    layer_dropout(rate = 0.2) %>%
-#    layer_dense(dim(over_y)[2]) %>%
+#    layer_dense(dim(over.y)[2]) %>%
 #    layer_dropout(rate = 0.2) %>%
 #    layer_activation("softmax")
 #  model_over %>% compile(
@@ -247,28 +247,28 @@ over_x <- array(over_sample, dim = c(dim(over_sample),1))
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_after <- model_over %>% fit(
-#    x = over_x,
-#    y = over_y,
+#  lstm.after <- model.over %>% fit(
+#    x = over.x,
+#    y = over.y,
 #    validation_split = 0.1,
 #    epochs = 200
 #  )
-#  plot(lstm_after)
+#  plot(lstm.after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
-pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
+lstm.after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
+pred.label.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
 
-pred_label_over <- as.vector(unlist(pred_label_over))
-plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
+pred.label.over <- as.vector(unlist(pred.label.over))
+plot(structure(class = "keras_training_history", list(params = lstm.after$params, metrics = lstm.after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  pred_label <- model %>% predict_classes(test_x)
-#  pred_label_over <- model_over %>% predict_classes(test_x)
+#  pred.label <- model %>% predict_classes(test.x)
+#  pred.label.over <- model.over %>% predict_classes(test.x)
 
 ## ------------------------------------------------------------------------
-cm_before <- table(test_label, pred_label)
-cm_after <- table(test_label, pred_label_over)
+cm.before <- table(test.label, pred.label)
+cm.after <- table(test.label, pred.label.over)
 
 ## ---- echo=FALSE---------------------------------------------------------
 layout(matrix(c(1,1,2)))
@@ -287,7 +287,7 @@ text(245, 450, 'Predicted', cex=1.3, font=2)
 text(140, 400, '0', cex=1.2, srt=90)
 text(140, 335, '1', cex=1.2, srt=90)
 
-res <- as.numeric(cm_before)
+res <- as.numeric(cm.before)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
 text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
@@ -311,7 +311,7 @@ text(245, 450, 'Predicted', cex=1.3, font=2)
 text(140, 400, '0', cex=1.2, srt=90)
 text(140, 335, '1', cex=1.2, srt=90)
 
-res <- as.numeric(cm_after)
+res <- as.numeric(cm.after)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
 text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
@@ -321,49 +321,49 @@ text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
 
 ## ---- warning=FALSE------------------------------------------------------
 library(pROC)
-plot.roc(as.vector(test_label), pred_label, legacy.axes = TRUE, col = "blue", 
+plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", 
          print.auc = TRUE, print.auc.cex= .8, xlab = 'False Positive Rate', 
          ylab = 'True Positive Rate', main="ROC MHEALTH")
-plot.roc(as.vector(test_label), pred_label_over, legacy.axes = TRUE, col = "red", 
+plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", 
          print.auc = TRUE, print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 
 ## ------------------------------------------------------------------------
-HFT <- HFT ()
+HFT <- OSTSC::HFT()
 
 label <- HFT$y
 sample <- HFT$x
-train_label <- label[1:15000]
-train_sample <- sample[1:15000, ]
-test_label <- label[15001:30000]
-test_sample <- sample[15001:30000, ]
+train.label <- label[1:15000]
+train.sample <- sample[1:15000, ]
+test.label <- label[15001:30000]
+test.sample <- sample[15001:30000, ]
 
 ## ------------------------------------------------------------------------
-table(train_label)
+table(train.label)
 
 ## ---- results='hide'-----------------------------------------------------
-MyData <- OSTSC(train_sample, train_label)
-over_sample <- MyData$sample
-over_label <- MyData$label
+MyData <- OSTSC(train.sample, train.label)
+over.sample <- MyData$sample
+over.label <- MyData$label
 
 ## ------------------------------------------------------------------------
-table(over_label)
+table(over.label)
 
 ## ------------------------------------------------------------------------
 library(keras)
 library(dummies)
-train_y <- dummy(train_label)
-test_y <- dummy(test_label)
-train_x <- array(train_sample, dim = c(dim(train_sample),1)) 
-test_x <- array(test_sample, dim = c(dim(test_sample),1)) 
+train.y <- dummy(train.label)
+test.y <- dummy(test.label)
+train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
+test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model = keras_model_sequential()
+#  model <- keras_model_sequential()
 #  model %>%
-#    layer_lstm(10, input_shape = c(dim(train_x)[2], dim(train_x)[3])) %>%
+#    layer_lstm(10, input_shape = c(dim(train.x)[2], dim(train.x)[3])) %>%
 #    layer_dropout(rate = 0.2) %>%
-#    layer_dense(dim(train_y)[2]) %>%
+#    layer_dense(dim(train.y)[2]) %>%
 #    layer_dropout(rate = 0.2) %>%
 #    layer_activation("softmax")
 #  model %>% compile(
@@ -371,60 +371,60 @@ test_x <- array(test_sample, dim = c(dim(test_sample),1))
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_before <- model %>% fit(
-#    x = train_x,
-#    y = train_y,
+#  lstm.before <- model %>% fit(
+#    x = train.x,
+#    y = train.y,
 #    validation_split = 0.1,
 #    epochs = 200
 #  )
-#  plot(lstm_before)
+#  plot(lstm.before)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_e200.rdata')
-pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_predlabel.rdata')
+lstm.before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_e200.rdata')
+pred.label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_predlabel.rdata')
 
-pred_label <- as.vector(unlist(pred_label))
-plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
+pred.label <- as.vector(unlist(pred.label))
+plot(structure(class = "keras_training_history", list(params = lstm.before$params, metrics = lstm.before$metrics)))
 
 ## ------------------------------------------------------------------------
-over_y <- dummy(over_label)
-over_x <- array(over_sample, dim = c(dim(over_sample),1)) 
+over.y <- dummy(over.label)
+over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model_over = keras_model_sequential()
-#  model_over %>%
-#    layer_lstm(10, input_shape = c(dim(over_x)[2], dim(over_x)[3])) %>%
+#  model.over <- keras_model_sequential()
+#  model.over %>%
+#    layer_lstm(10, input_shape = c(dim(over.x)[2], dim(over.x)[3])) %>%
 #    layer_dropout(rate = 0.2) %>%
-#    layer_dense(dim(over_y)[2]) %>%
+#    layer_dense(dim(over.y)[2]) %>%
 #    layer_dropout(rate = 0.2) %>%
 #    layer_activation("softmax")
-#  model_over %>% compile(
+#  model.over %>% compile(
 #    loss = "categorical_crossentropy",
 #    optimizer = "adam",
 #    metrics = "accuracy"
 #  )
-#  lstm_after <- model_over %>% fit(
-#    x = over_x,
-#    y = over_y,
+#  lstm.after <- model.over %>% fit(
+#    x = over.x,
+#    y = over.y,
 #    validation_split = 0.1,
 #    epochs = 200
 #  )
 #  plot(lstm_after)
 
 ## ---- echo=FALSE, message=FALSE------------------------------------------
-lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_e200.rdata')
-pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_predlabel.rdata')
+lstm.after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_e200.rdata')
+pred.label.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_predlabel.rdata')
 
-pred_label_over <- as.vector(unlist(pred_label_over))
-plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
+pred.label.over <- as.vector(unlist(pred.label.over))
+plot(structure(class = "keras_training_history", list(params = lstm.after$params, metrics = lstm.after$metrics)))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  pred_label <- model %>% predict_classes(test_x)
-#  pred_label_over <- model_over %>% predict_classes(test_x)
+#  pred.label <- model %>% predict_classes(test.x)
+#  pred.label.over <- model.over %>% predict_classes(test.x)
 
 ## ------------------------------------------------------------------------
-cm_before <- table(test_label, pred_label)
-cm_after <- table(test_label, pred_label_over)
+cm.before <- table(test.label, pred.label)
+cm.after <- table(test.label, pred.label.over)
 
 ## ---- echo=FALSE---------------------------------------------------------
 layout(matrix(c(1,1,2)))
@@ -450,7 +450,7 @@ text(130, 320, '1', cex=1.2, srt=90)
 text(120, 370, 'True', cex=1.3, srt=90, font=2)
 text(240, 450, 'Predicted', cex=1.3, font=2)
   
-res <- as.numeric(cm_before)
+res <- as.numeric(cm.before)
 sum1 <- res[1] + res[4] + res[7]
 sum2 <- res[2] + res[5] + res[8]
 sum3 <- res[3] + res[6] + res[9]
@@ -487,7 +487,7 @@ text(130, 320, '1', cex=1.2, srt=90)
 text(120, 370, 'True', cex=1.3, srt=90, font=2)
 text(240, 450, 'Predicted', cex=1.3, font=2)
 
-res <- as.numeric(cm_after)
+res <- as.numeric(cm.after)
 sum1 <- res[1] + res[4] + res[7]
 sum2 <- res[2] + res[5] + res[8]
 sum3 <- res[3] + res[6] + res[9]
@@ -503,10 +503,10 @@ text(310, 320, round(res[9]/sum3, 4), cex=1.6, font=2, col='white')
 
 ## ---- warning=FALSE------------------------------------------------------
 library(pROC)
-plot.roc(test_label, pred_label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
+plot.roc(test.label, pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
          print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
          main="ROC HFT")
-plot.roc(test_label, pred_label_over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
+plot.roc(test.label, pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
