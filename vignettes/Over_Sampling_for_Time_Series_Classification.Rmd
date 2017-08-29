@@ -57,7 +57,7 @@ First of all, let's see how OSTSC performs on small datasets. The dataset synthe
 ```{r, echo=FALSE, message=FALSE}
 require(OSTSC)
 require(keras)
-require(rlist)
+require(rio)
 require(dummies)
 require(pROC)
 ```
@@ -129,11 +129,13 @@ lstm_before <- model %>% fit(
 plot(lstm_before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-score <- rlist::list.load('/home/lwei/sc_before_score.rdata')
-lstm_before <- rlist::list.load('/home/lwei/sc_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/sc_before_predlabel.rdata')
+score <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_score.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_before_predlabel.rdata')
+
+score <- as.vector(unlist(score))
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 ```
 
 3. Evaluate the model.
@@ -179,11 +181,13 @@ lstm_after <- model_over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-score_over <- rlist::list.load('/home/lwei/sc_after_score.rdata')
-lstm_after <- rlist::list.load('/home/lwei/sc_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/sc_after_predlabel.rdata')
+score_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_score.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/synthetic_control%20model%20saved/sc_after_predlabel.rdata')
+
+score_over <- as.vector(unlist(score_over))
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 ```
 
 3. Evaluate the model.
@@ -334,10 +338,11 @@ lstm_before <- model %>% fit(
 plot(lstm_before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm_before <- rlist::list.load('/home/lwei/mhealth_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/mhealth_before_predlabel.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_predlabel.rdata')
+
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 ```
 
 2. To train the classifier on the new data after oversampling.
@@ -368,10 +373,11 @@ lstm_after <- model_over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm_after <- rlist::list.load('/home/lwei/mhealth_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/mhealth_after_predlabel.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
+
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 ```
 
 3. To compare the confusion matrices and ROC plot. The power of OSTSC will come out more on more training epochs. 
@@ -518,10 +524,11 @@ lstm_before <- model %>% fit(
 plot(lstm_before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm_before <- rlist::list.load('/home/lwei/HFT_before_e200.rdata')
-pred_label <- rlist::list.load('/home/lwei/HFT_before_predlabel.rdata')
+lstm_before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_e200.rdata')
+pred_label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_predlabel.rdata')
+
 pred_label <- as.vector(unlist(pred_label))
-plot(lstm_before)
+plot(structure(class = "keras_training_history", list(params = lstm_before$params, metrics = lstm_before$metrics)))
 ```
 
 2. To train the classifier on the new data after oversampling.
@@ -552,10 +559,11 @@ lstm_after <- model_over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm_after <- rlist::list.load('/home/lwei/HFT_after_e200.rdata')
-pred_label_over <- rlist::list.load('/home/lwei/HFT_after_predlabel.rdata')
+lstm_after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
+pred_label_over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
+
 pred_label_over <- as.vector(unlist(pred_label_over))
-plot(lstm_after)
+plot(structure(class = "keras_training_history", list(params = lstm_after$params, metrics = lstm_after$metrics)))
 ```
 
 3. To compare the confusion matrices and ROC plot. When the dataset size gets larger and the imbalance degree gets more severe, the OSTSC performs better than unoversampled data. 
