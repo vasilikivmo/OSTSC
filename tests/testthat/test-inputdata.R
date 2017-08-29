@@ -11,7 +11,7 @@ test_that("input data could be in xts format", {
   df_label <- df_xts[, c(1)]
   df_sample <- df_xts[, -1]
   # oversampling
-  MyData <- OSTSC(df_sample, df_label)
+  MyData <- OSTSC(df_sample, df_label, k=4)
   label <- MyData$label
   expect_equal( length(label[which(label==0)]), length(label[which(label==1)]) )
 })
@@ -24,7 +24,7 @@ test_that("input data could be in array format", {
   df_label <- as.array(train_label)
   df_sample <- as.array(train_sample)
   # oversampling
-  MyData <- OSTSC(df_sample, df_label)
+  MyData <- OSTSC(df_sample, df_label, k=4)
   label <- MyData$label
   expect_equal( length(label[which(label==0)]), length(label[which(label==1)]) )
 })
@@ -37,7 +37,7 @@ test_that("input data could be in data frame format", {
   df_label <- as.data.frame(train_label)
   df_sample <- as.data.frame(train_sample)
   # oversampling
-  MyData <- OSTSC(df_sample, df_label)
+  MyData <- OSTSC(df_sample, df_label, k=4)
   label <- MyData$label
   expect_equal( length(label[which(label==0)]), length(label[which(label==1)]) )
 })
@@ -62,7 +62,7 @@ test_that("OSTSC handles datasets containing NA, NaN, or accidental strings", {
   train_sample[4, 1] <- NA 
   train_sample[5, 5] <- 'a'
   # oversampling
-  MyData <- OSTSC(train_sample, train_label)
+  MyData <- OSTSC(train_sample, train_label, k=4)
   label <- MyData$label
   expect_equal( length(label[which(label==0)]), length(label[which(label==1)]) )
 })
