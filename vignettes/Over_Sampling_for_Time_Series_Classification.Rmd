@@ -259,7 +259,7 @@ lstm.before <- model %>% fit(
   x = train.x, 
   y = train.y, 
   validation_split = 0.2,
-  epochs = 20
+  epochs = 60
 )
 plot(lstm.before)
 ```
@@ -302,7 +302,7 @@ lstm.after <- model.over %>% fit(
   x = over.x, 
   y = over.y, 
   validation_split = 0.2,
-  epochs = 20
+  epochs = 60
 )
 plot(lstm.after)
 ```
@@ -452,7 +452,7 @@ lstm.before <- model %>% fit(
   x = train.x, 
   y = train.y, 
   validation_split = 0.2,
-  epochs = 20
+  epochs = 60
 )
 plot(lstm.before)
 ```
@@ -495,7 +495,7 @@ lstm.after <- model.over %>% fit(
   x = over.x, 
   y = over.y, 
   validation_split = 0.2,
-  epochs = 20
+  epochs = 60
 )
 plot(lstm.after)
 ```
