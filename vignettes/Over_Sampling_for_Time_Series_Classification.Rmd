@@ -648,11 +648,9 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_e200.rdata')
-pred.label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_before_predlabel.rdata')
-
-pred.label <- as.vector(unlist(pred.label))
-plot(structure(class = "keras_training_history", list(params = lstm.before$params, metrics = lstm.before$metrics)))
+lstm.before <- OSTOC::BefoResuMHEALTH()
+pred.label <- OSTOC::BefoLabelMHEALTH()
+plot(lstm.before)
 ```
 
 2. To train the classifier on the new data after oversampling.
@@ -683,11 +681,9 @@ lstm.after <- model.over %>% fit(
 plot(lstm.after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_e200.rdata')
-pred.label.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/Mhealth%20LSTM%20model%20saved/mhealth_after_predlabel.rdata')
-
-pred.label.over <- as.vector(unlist(pred.label.over))
-plot(structure(class = "keras_training_history", list(params = lstm.after$params, metrics = lstm.after$metrics)))
+lstm.after <- OSTOC::AfterResuMHEALTH()
+pred.label.over <- OSTOC::AfterLabelMHEALTH()
+plot(lstm.after)
 ```
 
 3. To compare the confusion matrices and ROC plot. The power of OSTSC will come out more on more training epochs. 
@@ -828,11 +824,9 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_e200.rdata')
-pred.label <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_before_predlabel.rdata')
-
-pred.label <- as.vector(unlist(pred.label))
-plot(structure(class = "keras_training_history", list(params = lstm.before$params, metrics = lstm.before$metrics)))
+lstm.before <- OSTOC::BefoResuHFT()
+pred.label <- OSTOC::BefoLabelHFT()
+plot(lstm.before)
 ```
 
 2. To train the classifier on the new data after oversampling.
@@ -863,11 +857,9 @@ lstm.after <- model.over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_e200.rdata')
-pred.label.over <- rio::import('https://github.com/lweicdsor/GSoC2017/raw/master/HFT%20LSTM%20model%20saved/HFT_after_predlabel.rdata')
-
-pred.label.over <- as.vector(unlist(pred.label.over))
-plot(structure(class = "keras_training_history", list(params = lstm.after$params, metrics = lstm.after$metrics)))
+lstm.after <- OSTOC::AfterResuHFT()
+pred.label.over <- OSTOC::AfterLabelHFT()
+plot(lstm.after)
 ```
 
 3. To compare the confusion matrices and ROC plot. When the dataset size gets larger and the imbalance degree gets more severe, the OSTSC performs better than unoversampled data. 

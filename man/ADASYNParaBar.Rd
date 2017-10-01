@@ -24,4 +24,3 @@ sampleADA
 Generate samples by ADASYN approach.
 }
 \keyword{internal}
-
