@@ -259,7 +259,7 @@ lstm.before <- model %>% fit(
   x = train.x, 
   y = train.y, 
   validation_split = 0.2,
-  epochs = 60
+  epochs = 50
 )
 plot(lstm.before)
 ```
@@ -302,7 +302,7 @@ lstm.after <- model.over %>% fit(
   x = over.x, 
   y = over.y, 
   validation_split = 0.2,
-  epochs = 60
+  epochs = 50
 )
 plot(lstm.after)
 ```
@@ -382,7 +382,7 @@ The ROC plot tells the same.
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
          print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC synthetic_control")
+         main="ROC MHEALTH Checking")
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
@@ -452,7 +452,7 @@ lstm.before <- model %>% fit(
   x = train.x, 
   y = train.y, 
   validation_split = 0.2,
-  epochs = 60
+  epochs = 50
 )
 plot(lstm.before)
 ```
@@ -495,7 +495,7 @@ lstm.after <- model.over %>% fit(
   x = over.x, 
   y = over.y, 
   validation_split = 0.2,
-  epochs = 60
+  epochs = 50
 )
 plot(lstm.after)
 ```
@@ -575,7 +575,7 @@ The ROC plot tells the same.
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
          print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC synthetic_control")
+         main="ROC HFT Checking")
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
@@ -752,7 +752,7 @@ The ROC plot shows the classification performances more intuitively.
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", 
          print.auc = TRUE, print.auc.cex= .8, xlab = 'False Positive Rate', 
-         ylab = 'True Positive Rate', main="ROC MHEALTH")
+         ylab = 'True Positive Rate', main="ROC MHEALTH Evaluation")
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", 
          print.auc = TRUE, print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
@@ -954,7 +954,7 @@ The ROC plot shows the classification performances more intuitively. Because the
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
          print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC HFT")
+         main="ROC HFT Evaluation")
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
