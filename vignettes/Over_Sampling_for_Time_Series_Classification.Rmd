@@ -648,8 +648,10 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- OSTSC:::LSTMResu(LSTM_MHEALTH_full_before)
-pred.label <- OSTSC:::LSTMLabel(LSTM_MHEALTH_predlabel_before)
+data(LSTM_MHEALTH_predlabel_before)
+data(LSTM_MHEALTH_full_before)
+pred.label <- as.vector(unlist(LSTM_MHEALTH_predlabel_before)) 
+lstm.before <- structure(class = "keras_training_history", list(params = LSTM_MHEALTH_full_before$params, metrics = LSTM_MHEALTH_full_before$metrics))  
 plot(lstm.before)
 ```
 
@@ -681,8 +683,10 @@ lstm.after <- model.over %>% fit(
 plot(lstm.after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- OSTSC:::LSTMResu(LSTM_MHEALTH_full_after)
-pred.label.over <- OSTSC:::LSTMLabel(LSTM_MHEALTH_predlabel_after)
+data(LSTM_MHEALTH_predlabel_after)
+data(LSTM_MHEALTH_full_after)
+pred.label.over <- as.vector(unlist(LSTM_MHEALTH_predlabel_after)) 
+lstm.after <- structure(class = "keras_training_history", list(params = LSTM_MHEALTH_full_after$params, metrics = LSTM_MHEALTH_full_after$metrics))  
 plot(lstm.after)
 ```
 
@@ -824,8 +828,10 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- OSTSC:::LSTMResu(LSTM_HFT_full_before)
-pred.label <- OSTSC:::LSTMLabel(LSTM_HFT_predlabel_before)
+data(LSTM_HFT_predlabel_before)
+data(LSTM_HFT_full_before)
+pred.label <- as.vector(unlist(LSTM_HFT_predlabel_before)) 
+lstm.before <- structure(class = "keras_training_history", list(params = LSTM_HFT_full_before$params, metrics = LSTM_HFT_full_before$metrics))  
 plot(lstm.before)
 ```
 
@@ -857,8 +863,10 @@ lstm.after <- model.over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- OSTSC:::LSTMResu(LSTM_HFT_full_after)
-pred.label.over <- OSTSC:::LSTMLabel(LSTM_HFT_predlabel_after)
+data(LSTM_HFT_predlabel_after)
+data(LSTM_HFT_full_after)
+pred.label.over <- as.vector(unlist(LSTM_HFT_predlabel_after)) 
+lstm.after <- structure(class = "keras_training_history", list(params = LSTM_HFT_full_after$params, metrics = LSTM_HFT_full_after$metrics))  
 plot(lstm.after)
 ```
 
