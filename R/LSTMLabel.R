@@ -6,7 +6,7 @@
 #' @return resu: the precomputed prediction labels in vector format
 
 LSTMLabel <- function(labelData) {
-  load_data()  # load data
+  data(labelData)  # load data
   resu <- as.vector(unlist(labelData))  #as vector
   return(resu)
 }

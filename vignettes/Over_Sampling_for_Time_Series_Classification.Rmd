@@ -584,7 +584,7 @@ legend("bottomright", legend=c("Before Oversampling", "After Oversampling"),
 
 ### Evaluating OSTSC on large datasets
 
-In the evaluation section, we uses the MHEALTH dataset and HFT dataset again. But for evaluation, we increases the data sizes by 5 or 10 times.
+In the evaluation section, we uses the MHEALTH dataset and HFT dataset again. But for evaluation, we increases the data sizes by 5 or 10 times. The evaluation process takes about two hours on one dataset on a four-cores laptop because of the LSTM process.
 
 #### The MHEALTH dataset
 
@@ -648,8 +648,8 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- OSTOC::BefoResuMHEALTH()
-pred.label <- OSTOC::BefoLabelMHEALTH()
+lstm.before <- OSTSC:::LSTMResu(LSTM_MHEALTH_full_before)
+pred.label <- OSTSC:::LSTMLabel(LSTM_MHEALTH_predlabel_before)
 plot(lstm.before)
 ```
 
@@ -681,8 +681,8 @@ lstm.after <- model.over %>% fit(
 plot(lstm.after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- OSTOC::AfterResuMHEALTH()
-pred.label.over <- OSTOC::AfterLabelMHEALTH()
+lstm.after <- OSTSC:::LSTMResu(LSTM_MHEALTH_full_after)
+pred.label.over <- OSTSC:::LSTMLabel(LSTM_MHEALTH_predlabel_after)
 plot(lstm.after)
 ```
 
@@ -824,8 +824,8 @@ lstm.before <- model %>% fit(
 plot(lstm.before)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.before <- OSTOC::BefoResuHFT()
-pred.label <- OSTOC::BefoLabelHFT()
+lstm.before <- OSTSC:::LSTMResu(LSTM_HFT_full_before)
+pred.label <- OSTSC:::LSTMLabel(LSTM_HFT_predlabel_before)
 plot(lstm.before)
 ```
 
@@ -857,8 +857,8 @@ lstm.after <- model.over %>% fit(
 plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
-lstm.after <- OSTOC::AfterResuHFT()
-pred.label.over <- OSTOC::AfterLabelHFT()
+lstm.after <- OSTSC:::LSTMResu(LSTM_HFT_full_after)
+pred.label.over <- OSTSC:::LSTMLabel(LSTM_HFT_predlabel_after)
 plot(lstm.after)
 ```
 
@@ -961,7 +961,7 @@ legend("bottomright", legend=c("Before Oversampling", "After Oversampling"),
        col=c("blue", "red"), lwd=2, cex= .6)
 ```
 
-Above are three examples on three different datasets. OSTSC package could have a wide usage over multi-regions.
+Above are two examples on different datasets. OSTSC package could have a wide usage over multi-regions.
 
 ## References
 

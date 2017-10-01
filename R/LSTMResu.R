@@ -6,7 +6,7 @@
 #' @return resu: the precomputed result of LSTM in class keras_training_history
 
 LSTMResu <- function(fullData) {
-  load_data()  # load data
+  data(fullData)  # load data
   resu <- structure(class = "keras_training_history", list(params = LSTMResu$params, metrics = LSTMResu$metrics))  #build class
   return(resu)
 }
