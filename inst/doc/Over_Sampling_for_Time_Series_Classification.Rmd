@@ -3,8 +3,9 @@ title: "Over Sampling for Time Series Classification"
 author: "Matthew F. Dixon,  Diego Klabjan and Lan Wei"
 date: "`r Sys.Date()`"
 output: pdf_document
+fig_caption: yes
 bibliography: ["referenceOSTSC.bib"]
-biblio-style: "apalike"
+biblio-style: "ieeetr"
 vignette: >
   %\VignetteIndexEntry{Over_Sampling_for_Time_Series_Classification}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,15 +16,17 @@ vignette: >
 
 A significant number of learning problems involve the accurate classification of rare events or outliers from time series data. For example, the detection of a flash crash or rogue trading from financial markets data, or heart arrhythmia from an electrocardiogram. Due to the rarity of these events, machine learning classifiers for detecting these events may be biased towards avoiding false positives because any potential for false positives is greatly exaggerated by the number of negative samples in the data set. 
 
-Class imbalance problems are most easily addressed by either oversampling the minority class or undersampling the majority class, or both. More [7] compared a batch of resampling techniques' classification performances on imbalance datasets. Besides the conventional resampling approaches, More showed how ensemble methods keep as much original information as possible from the majority class when performing undersampling. Ensemble methods perform well and have gained popularity in the data mining literature. Dubey et al. [9] studied an ensemble system of feature selection and data sampling from imbalance Alzheimer's Disease Neuroimaging Initiative dataset. 
+Class imbalance problems are most easily addressed by either oversampling the minority class or undersampling the majority class, or both. More [9] compared a batch of resampling techniques' classification performances on imbalance datasets. Besides the conventional resampling approaches, More showed how ensemble methods keep as much original information as possible from the majority class when performing undersampling. Ensemble methods perform well and have gained popularity in the data mining literature. Dubey et al. [7] studied an ensemble system of feature selection and data sampling from imbalance Alzheimer's Disease Neuroimaging Initiative dataset. 
 
 However the imbalanced time series classification problem is more complex when the time dimension is accounted for. Not only is the assumption that the observations are independent too strong, but also the predictors may be cross-correlated too. The sample correlation structures may weaken or even broken by the conventional resampling approaches described above. 
 
-There are two existing research directions for imbalance time series classification. One is to preserve the covariance structure during oversampling proposed by Hong et al. [1]. Another one is to conduct undersampling with various learning algorithms, proposed by Liang and Zhang [8]. 
+There are two existing research directions for imbalance time series classification. One is to preserve the covariance structure during oversampling proposed by Hong et al. [3]. Another one is to conduct undersampling with various learning algorithms, proposed by Liang and Zhang [8]. 
 
 Both of the two approaches are limited to binary-class classification and do not consider the more general problem of multi-classification
 
-A key observation by Hong et al. [1] is that the sampling in a time series should preserve the covariance structure. This approach has been shown to outperform other sampling approaches such as undersampling the majority class, oversampling the minority class, and SMOTE. Our R package `Over Sampling for Time Series Classification` (OSTSC) is built on this idea. OSTSC oversamples the minority classes using structure preserving oversampling and ADASYN. 
+A key observation by Hong et al. [3] is that the sampling in a time series should preserve the covariance structure. This approach has been shown to outperform other sampling approaches such as undersampling the majority class, oversampling the minority class, and SMOTE. Our R package `Over Sampling for Time Series Classification` (OSTSC) is built on this idea. OSTSC oversamples the minority classes using structure preserving oversampling and ADASYN. 
+
+For examining the performances of the oversampling, Long short-term memory (LSTM), a type of Recurrent neural networks (RNNs), is prefered. RNNs are widely used on forecasting univariate financial time series. Dixon et al. [6] applied RNN to high frequency trading. They used a short observations sequence of limit order book depths and market orders to predict the next event price-flip. Our experiments used this HFT dataset to examine the OSTSC oversampling performance.
 
 This version of the package currently only supports univariant classification of time series. The extension to multi-features requires tensor computations which are not implemented here.
 
@@ -31,7 +34,7 @@ This version of the package currently only supports univariant classification of
 
 The synthetic balanced samples are generated by a hybridization of the Enhanced Structure Preserving Oversampling (ESPO) and ADASYN algorithms. Unlike conventional sampling approaches which assume that the observations are drawn from an independent, identical distribution, and hence do not preserve the auto-covariance structure, ESPO preserves the covariance structure of the time series.
 
-ESPO is used to generate a large percentage of the synthetic minority samples from univariate labeled time series under the modeling assumption that the predictors are Gaussian. EPSO estimates the covariance structure of the minority-class samples and applies a spectral filer to reduce noise. ADASYN is a nearest neighbor interpolation approach, similarly to SMOTE, which is applied to the EPSO samples [1].
+ESPO is used to generate a large percentage of the synthetic minority samples from univariate labeled time series under the modeling assumption that the predictors are Gaussian. EPSO estimates the covariance structure of the minority-class samples and applies a spectral filer to reduce noise. ADASYN is a nearest neighbor interpolation approach, similarly to SMOTE, which is applied to the EPSO samples [3].
 
 More formally, given the time series of positive labeled predictors $P = \left \{ x_{11}, x_{12}, ..., x_{1|P|}\right \}$ and the negative time series $N = \left \{ x_{01}, x_{02}, ..., x_{0|N|}\right \}$, where $|N| \gg |P|$, $x_{ij} \in \mathbb{R}^{n \times 1}$, the new samples will be generated in the following steps.
 
@@ -47,7 +50,11 @@ Given $\hat{D}$ is the diagonal matrix of regularized eigenvalues $\left \{ \hat
 
 Given the transformed positive data $P_{t} = \left \{ q_{1i}\right \}$ and negative data $N_{t} = \left \{ q_{0j}\right \}$, each sample $q_{1i}$ is replicated $\Gamma_{i} = \left | S_{i:k-NN}\bigcap N_{t} \right | /Z$ times, where $S_{i:k-NN}$ is this sample's kNN in the entire dataset, $Z$ is a normalization factor to make $\sum_{i=1}^{|P_{t}|}\Gamma _{i} = 1$. 
 
-See [1] for further details of the approach.
+Read [3] for further details of the approach.
+
+## OSTSC Package
+
+The structure and charactors of the OSTSC package would be in the Functionality section. After that, there would be examples on three different size scale datasets. First, we would show how the oversampling process works on three small different build-in datasets. Second, we would show the `OSTSC` function performs well on two medium build-in real world dataset (1e3 scale dataset). Finally, we would evaluate the `OSTSC` function on two larger real world datasets (1e4 scale dataset).
 
 ## Functionality
 
@@ -55,13 +62,13 @@ The package has only one callable function, OSTSC. There's ten parameters users 
 
 The package imported R package parallel, doParallel, doSNOW and foreach for parallel control. Parallel is strongly suggested for dataset containing over 30000 observations. The package also imported mvrnorm from R package `MASS` to generate random vectors from the multivariate normal distribution, and imported rdist from R package `fields` to calculate the Euclidean distance between vector and matrix.
 
-The vignettes displays three examples. For examining the performances, R packages `keras`, `dummies` and `pROC` are required in running the examples.
+The vignettes displays some examples below. For examining the performances, R packages `keras`, `dummies` and `pROC` are required in running the examples.
 
 ## Examples
 
 ### Data loading & oversampling
 
-The OSTSC package has three small build-in datasets. 
+The OSTSC package has three small build-in datasets. We will show how the `OSTSC` function works on them below.
 
 #### The synthetically generated control datasets
 
@@ -97,7 +104,7 @@ The imbalance of training data is 1:5.
 table(train.label)
 ```
 
-Here is a simple example to show how to oversample the minority data to the same amount of majority, and export the sample and label from oversampled data. There are ten parameters in the OSTSC function, the details of them can be read in the help documents. Users only need to input at least label and sample data to be able to call the function. The OSTSC function receives label data and sample data seperately. 
+Here is a simple example to show how to oversample the minority data to the same amount of majority, and export the sample and label from oversampled data. There are ten parameters in the OSTSC function, the details of them can be read in the help documents. Users only need to claim at least label and sample data to be able to call the function. The OSTSC function receives label data and sample data seperately. 
 
 ```{r, results='hide'}
 MyData <- OSTSC(train.sample, train.label, parallel = FALSE)
@@ -119,7 +126,7 @@ dim(over.sample)
 
 #### The automatic diatoms identification datasets
 
-The dataset `Dataset_Adiac` is generated from a pilot study concerning automatic identification of diatoms (unicellular algae) on the basis of images (2004) ([via](http://timeseriesclassification.com/description.php?Dataset=Adiac)). The dataset originally had 37 classes. But we selected only one class as positive class (class 1) and all others as negative class (class 0) to form an extremely imbalance dataset. 
+The dataset `Dataset_Adiac` is generated from a pilot study concerning automatic identification of diatoms (unicellular algae) on the basis of images (2004) ([via](http://timeseriesclassification.com/description.php?Dataset=Adiac)). The dataset originally had 37 classes. But we selected only one class as positive class (class 1) and all others as negative class (class 0) to form an extremely imbalance dataset. Users load the dataset into environment by calling `data()`.
 
 ```{r}
 data(Dataset_Adiac)
@@ -161,6 +168,7 @@ table(over.label)
 The OSTSC function deals with multi-class classification. The users could demand the number of the classes to be oversampled, which defaulted to be as most as possible. The oversampling would start from the class with least observations.
 The dataset `Dataset_HFT` is extracted from a real and giant size high frequency trading dataset. The feature is from instantaneous liquidity imbalance using the best bid to ask ratio, up-tick as class 1, down-tick as class -1, and normal status as class 0.  
 While the whole observations are ordered in the time order, the dataset haven't split training and setting data. The users can split it by any ratio they like. 
+Users load the dataset into environment by calling `data()`.
 
 ```{r}
 data(Dataset_HFT)
@@ -181,7 +189,7 @@ The imbalance of dataset is 1:48:1.
 table(train.label)
 ```
 
-Here we oversamples all the minority class. The oversampling is processed on a one-to-rest method, which means the minority class would be oversampled to the same number of the sum of all other classes.
+Here we oversamples all the minority class. The oversampling is processed on a one-vs-rest method, which means the minority class would be oversampled to the same number of the sum of all other classes.
 
 ```{r, results='hide'}
 MyData <- OSTSC(train.sample, train.label, parallel = FALSE)
@@ -195,13 +203,13 @@ Let's check the balanced new dataset.
 table(over.label)
 ```
 
-Above is how the OSTSC does oversampling. In the next section, we would check the oversampled data on two larger built-in datasets.
+Above is how the OSTSC does oversampling on different datasets. In the next section, we would check the oversampled data on two larger built-in datasets.
 
 ### Checking OSTSC on built-in datasets
 
 #### The MHEALTH dataset
 
-The dataset `Dataset_MHEALTH` is devised to benchmark techniques dealing with human behavior analysis based on multimodal body sensing. ([via](https://http://archive.ics.uci.edu/ml/datasets/mhealth+dataset)) [4].
+The dataset `Dataset_MHEALTH` is devised to benchmark techniques dealing with human behavior analysis based on multimodal body sensing. ([via](https://http://archive.ics.uci.edu/ml/datasets/mhealth+dataset)) [1].
 For example convenience, only subject 1 and feature 12 (magnetometer from the left-ankle sensor (X axis)) are used, and the dataset is reformated to binary class. Class 11 (Running) is set as positive, others as negative. The dataset has already split to training and testing data, feature and label data.
 
 ```{r}
@@ -249,7 +257,7 @@ train.x <- array(train.sample, dim = c(dim(train.sample),1))
 test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
 ```
 
-2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show the plot.
+2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show it in Figure 1.
 
 ```{r, results='hide'}
 model <- keras_model_sequential()
@@ -270,7 +278,8 @@ lstm.before <- model %>% fit(
   validation_split = 0.2,
   epochs = 50
 )
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on MHEALTH dataset before oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.before)
 ```
 
@@ -293,7 +302,7 @@ over.y <- to_categorical(over.label)
 over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
 ```
 
-2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show the plot.
+2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show it in Figure 2.
 
 ```{r, results='hide'}
 model.over <- keras_model_sequential()
@@ -314,7 +323,8 @@ lstm.after <- model.over %>% fit(
   validation_split = 0.2,
   epochs = 50
 )
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on MHEALTH dataset after oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.after)
 ```
 
@@ -328,7 +338,7 @@ cat("The loss value is", unlist(score.over[1]), ".\n")
 cat("The metric value (in this case 'accuracy') is", unlist(score.over[2]), ".\n")
 ```
 
-Besides the loss and accuracy, let's compare the confusion matrices. The mis-classification gets less after oversampling.
+Besides the loss and accuracy, the Figure 9 compares the confusion matrices of two LSTM classifications, and the Figure 10 compares the receiver operating characteristic curves. The mis-classification gets less after oversampling. 
 
 ```{r}
 pred.label <- model %>% predict_classes(test.x)
@@ -337,72 +347,73 @@ pred.label.over <- model.over %>% predict_classes(test.x)
 cm.before <- table(test.label, pred.label)
 cm.after <- table(test.label, pred.label.over)
 ```
-```{r, echo=FALSE}
-layout(matrix(c(1,1,2)))
+```{r, echo=FALSE, fig.width = 3, fig.height = 2}
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (before oversampling)', cex.main=1.75)
+title('(a)Before oversampling', font = 1, cex.main=1.3)
 
 rect(150, 430, 240, 370, col='#3F97D0')
 rect(250, 430, 340, 370, col='#F7AD50')
 rect(150, 305, 240, 365, col='#F7AD50')
 rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
+text(195, 435, '0', cex=1.1)
+text(295, 435, '1', cex=1.1)
+text(125, 370, 'True', cex=1.2, srt=90, font=2)
+text(245, 450, 'Predicted', cex=1.2, font=2)
+text(140, 400, '0', cex=1.1, srt=90)
+text(140, 335, '1', cex=1.1, srt=90)
 
 res <- as.numeric(cm.before)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+text(195, 400, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(195, 335, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(295, 400, round(res[3]/sum1, 4), cex=1.3, font=2, col='white')
+text(295, 335, round(res[4]/sum2, 4), cex=1.3, font=2, col='white')
 
-layout(matrix(c(1,1,2)))
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (after oversampling)', cex.main=1.75)
+title('(b)After oversampling', font = 1, cex.main=1.3)
 
 rect(150, 430, 240, 370, col='#3F97D0')
 rect(250, 430, 340, 370, col='#F7AD50')
 rect(150, 305, 240, 365, col='#F7AD50')
 rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
+text(195, 435, '0', cex=1.1)
+text(295, 435, '1', cex=1.1)
+text(125, 370, 'True', cex=1.2, srt=90, font=2)
+text(245, 450, 'Predicted', cex=1.2, font=2)
+text(140, 400, '0', cex=1.1, srt=90)
+text(140, 335, '1', cex=1.1, srt=90)
 
 res <- as.numeric(cm.after)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+text(195, 400, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(195, 335, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(295, 400, round(res[3]/sum1, 4), cex=1.3, font=2, col='white')
+text(295, 335, round(res[4]/sum2, 4), cex=1.3, font=2, col='white')
 ```
 
-The ROC plot tells the same.
+Figure 9: Normalized confusion matrix. (a) Confusion matrix of LSTM on MHEALTH dataset before oversampling. (b)Confusion matrix of LSTM on MHEALTH dataset after oversampling.
 
-```{r}
+```{r, fig.width = 5, fig.height = 4}
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
-         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC MHEALTH Checking")
+         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate') 
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 ```
 
+Figure 10: Receiver operating characteristic curve on MHEALTH Checking.
+
 #### The high frequency trading dataset 
 
-The dataset `Dataset_HFT` has been introduced in the `Data loading & oversampling` section. Here for a more detailed checking on OSTSC function, we extracted 3000 observations instead of 300 from the original high frequency trading dataset. We split the training and setting data by ratio 2:1. The first 2000 observations are training data, while the rest are testing.  
+The dataset `Dataset_HFT` has been introduced in the `Data loading & oversampling` section. Here for a more detailed checking on OSTSC function, we extracted 3000 observations instead of 300 from the original high frequency trading dataset. We split the training and setting data by ratio 2:1. The first 2000 observations are set to training data, while the rest are set to testing data.  
 
 ```{r}
 data(Dataset_HFT_Check)
@@ -438,13 +449,14 @@ And then we test the oversampling performance on LSTM.
 
 ```{r}
 library(keras)
-train.y <- to_categorical(train.label)
-test.y <- to_categorical(test.label)
+library(dummies)
+train.y <- dummy(train.label)
+test.y <- dummy(test.label)
 train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
 test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
 ```
 
-2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show the plot.
+2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show it in Figure 3.
 
 ```{r, results='hide'}
 model <- keras_model_sequential()
@@ -465,7 +477,8 @@ lstm.before <- model %>% fit(
   validation_split = 0.2,
   epochs = 50
 )
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on HFT dataset before oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.before)
 ```
 
@@ -484,11 +497,11 @@ Then to determine how does the classifier perform on the new data after oversamp
 1. One-hot encode the label vectors into binary class matrices using the Keras to_categorical() function. And transform the sample array to 3-dimension for LSTM.
 
 ```{r}
-over.y <- to_categorical(over.label)
+over.y <- dummy(over.label)
 over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
 ```
 
-2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show the plot.
+2. Initialize a sequential model. Add layers to the model. Compile the model. Store the fitting history and show it in Figure 4.
 
 ```{r, results='hide'}
 model.over <- keras_model_sequential()
@@ -509,7 +522,8 @@ lstm.after <- model.over %>% fit(
   validation_split = 0.2,
   epochs = 50
 )
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on HFT dataset after oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.after)
 ```
 
@@ -523,7 +537,7 @@ cat("The loss value is", unlist(score.over[1]), ".\n")
 cat("The metric value (in this case 'accuracy') is", unlist(score.over[2]), ".\n")
 ```
 
-Besides the loss and accuracy, let's compare the confusion matrices. The mis-classification gets less after oversampling.
+Besides the loss and accuracy, the Figure 11 compares the confusion matrices of two LSTM classifications, and the Figure 12 compares the receiver operating characteristic curves. Before oversampling, the LSTM fitting is not much better than white noise. The mis-classification gets less after oversampling. 
 
 ```{r}
 pred.label <- model %>% predict_classes(test.x)
@@ -532,68 +546,95 @@ pred.label.over <- model.over %>% predict_classes(test.x)
 cm.before <- table(test.label, pred.label)
 cm.after <- table(test.label, pred.label.over)
 ```
-```{r, echo=FALSE}
-layout(matrix(c(1,1,2)))
+```{r, echo=FALSE, fig.width = 3, fig.height = 2}
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (before oversampling)', cex.main=1.75)
+title('(a)Before oversampling', font = 1, cex.main=1.3)
 
-rect(150, 430, 240, 370, col='#3F97D0')
-rect(250, 430, 340, 370, col='#F7AD50')
-rect(150, 305, 240, 365, col='#F7AD50')
-rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
-
+rect(140, 430, 200, 390, col='#3F97D0')
+rect(210, 430, 270, 390, col='#F7AD50')
+rect(280, 430, 340, 390, col='#F7AD50')
+rect(140, 345, 200, 385, col='#F7AD50')
+rect(210, 345, 270, 385, col='#3F97D0')
+rect(280, 345, 340, 385, col='#F7AD50')
+rect(140, 300, 200, 340, col='#F7AD50')
+rect(210, 300, 270, 340, col='#F7AD50')
+rect(280, 300, 340, 340, col='#3F97D0')
+text(170, 435, '-1', cex=1.1)
+text(240, 435, '0', cex=1.1)
+text(310, 435, '1', cex=1.1)
+text(130, 410, '-1', cex=1.1, srt=90)
+text(130, 365, '0', cex=1.1, srt=90)
+text(130, 320, '1', cex=1.1, srt=90)
+text(120, 370, 'True', cex=1.2, srt=90, font=2)
+text(240, 450, 'Predicted', cex=1.2, font=2)
+  
 res <- as.numeric(cm.before)
-sum1 <- res[1] + res[3]
-sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+sum1 <- res[1] + res[4] + res[7]
+sum2 <- res[2] + res[5] + res[8]
+sum3 <- res[3] + res[6] + res[9]
+text(170, 410, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(170, 365, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(170, 320, round(res[3]/sum3, 4), cex=1.3, font=2, col='white')
+text(240, 410, round(res[4]/sum1, 4), cex=1.3, font=2, col='white')
+text(240, 365, round(res[5]/sum2, 4), cex=1.3, font=2, col='white')
+text(240, 320, round(res[6]/sum3, 4), cex=1.3, font=2, col='white')
+text(310, 410, round(res[7]/sum1, 4), cex=1.3, font=2, col='white')
+text(310, 365, round(res[8]/sum2, 4), cex=1.3, font=2, col='white')
+text(310, 320, round(res[9]/sum3, 4), cex=1.3, font=2, col='white')
 
-layout(matrix(c(1,1,2)))
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (after oversampling)', cex.main=1.75)
+title('(b)After oversampling', font = 1, cex.main=1.3)
 
-rect(150, 430, 240, 370, col='#3F97D0')
-rect(250, 430, 340, 370, col='#F7AD50')
-rect(150, 305, 240, 365, col='#F7AD50')
-rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
+rect(140, 430, 200, 390, col='#3F97D0')
+rect(210, 430, 270, 390, col='#F7AD50')
+rect(280, 430, 340, 390, col='#F7AD50')
+rect(140, 345, 200, 385, col='#F7AD50')
+rect(210, 345, 270, 385, col='#3F97D0')
+rect(280, 345, 340, 385, col='#F7AD50')
+rect(140, 300, 200, 340, col='#F7AD50')
+rect(210, 300, 270, 340, col='#F7AD50')
+rect(280, 300, 340, 340, col='#3F97D0')
+text(170, 435, '-1', cex=1.1)
+text(240, 435, '0', cex=1.1)
+text(310, 435, '1', cex=1.1)
+text(130, 410, '-1', cex=1.1, srt=90)
+text(130, 365, '0', cex=1.1, srt=90)
+text(130, 320, '1', cex=1.1, srt=90)
+text(120, 370, 'True', cex=1.2, srt=90, font=2)
+text(240, 450, 'Predicted', cex=1.2, font=2)
 
 res <- as.numeric(cm.after)
-sum1 <- res[1] + res[3]
-sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+sum1 <- res[1] + res[4] + res[7]
+sum2 <- res[2] + res[5] + res[8]
+sum3 <- res[3] + res[6] + res[9]
+text(170, 410, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(170, 365, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(170, 320, round(res[3]/sum3, 4), cex=1.3, font=2, col='white')
+text(240, 410, round(res[4]/sum1, 4), cex=1.3, font=2, col='white')
+text(240, 365, round(res[5]/sum2, 4), cex=1.3, font=2, col='white')
+text(240, 320, round(res[6]/sum3, 4), cex=1.3, font=2, col='white')
+text(310, 410, round(res[7]/sum1, 4), cex=1.3, font=2, col='white')
+text(310, 365, round(res[8]/sum2, 4), cex=1.3, font=2, col='white')
+text(310, 320, round(res[9]/sum3, 4), cex=1.3, font=2, col='white')
 ```
 
-The ROC plot tells the same.
+Figure 11: Normalized confusion matrix. (a) Confusion matrix of LSTM on HFT dataset before oversampling. (b)Confusion matrix of LSTM on HFT dataset after oversampling. 
 
-```{r}
+```{r, warning=FALSE, fig.width = 5, fig.height = 4}
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
-         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC HFT Checking")
+         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate')
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 ```
+
+Figure 12: Receiver operating characteristic curve on HFT Checking.
 
 ### Evaluating OSTSC on large datasets
 
@@ -628,159 +669,106 @@ over.label <- MyData$label
 table(over.label)
 ```
 
-For comparison, we use the same Long short-term memory (LSTM) classifier. 
+For comparison, we use the same Long short-term memory (LSTM) classifier. Every layer's setting is the same, except the epochs number is set to 200 now. Figure 5 and Figure 6 display the LSTM fitting histories on loss and accuracy before and after the oversampling.
 
-1. To train the classifier on the original data before oversampling.
-
-```{r}
-library(keras)
-train.y <- to_categorical(train.label)
-test.y <- to_categorical(test.label)
-train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
-test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
-```
-```{r, eval=FALSE}
-model <- keras_model_sequential()
-model %>%
-  layer_lstm(10, input_shape = c(dim(train.x)[2], dim(train.x)[3])) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_dense(dim(train.y)[2]) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_activation("softmax")
-model %>% compile(
-  loss = "categorical_crossentropy", 
-  optimizer = "adam", 
-  metrics = "accuracy"
-)
-lstm.before <- model %>% fit( 
-  x = train.x, 
-  y = train.y, 
-  validation_split = 0.2,
-  epochs = 200
-)
-plot(lstm.before)
-```
 ```{r, echo=FALSE, message=FALSE}
+library(keras)
+test.y <- to_categorical(test.label)
+test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
+
 data(LSTM_MHEALTH_predlabel_before)
 data(LSTM_MHEALTH_full_before)
+
 pred.label <- as.vector(unlist(LSTM_MHEALTH_predlabel_before)) 
 lstm.before <- structure(class = "keras_training_history", list(params = LSTM_MHEALTH_full_before$params, metrics = LSTM_MHEALTH_full_before$metrics))  
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on MHEALTH dataset before oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.before)
-```
-
-2. To train the classifier on the new data after oversampling.
-
-```{r}
-over.y <- to_categorical(over.label)
-over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
-```
-```{r, eval=FALSE}
-model.over <- keras_model_sequential()
-model.over %>%
-  layer_lstm(10, input_shape = c(dim(over.x)[2], dim(over.x)[3])) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_dense(dim(over.y)[2]) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_activation("softmax")
-model_over %>% compile(
-  loss = "categorical_crossentropy", 
-  optimizer = "adam", 
-  metrics = "accuracy"
-)
-lstm.after <- model.over %>% fit( 
-  x = over.x, 
-  y = over.y, 
-  validation_split = 0.1,
-  epochs = 200
-)
-plot(lstm.after)
 ```
 ```{r, echo=FALSE, message=FALSE}
 data(LSTM_MHEALTH_predlabel_after)
 data(LSTM_MHEALTH_full_after)
+
 pred.label.over <- as.vector(unlist(LSTM_MHEALTH_predlabel_after)) 
 lstm.after <- structure(class = "keras_training_history", list(params = LSTM_MHEALTH_full_after$params, metrics = LSTM_MHEALTH_full_after$metrics))  
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on MHEALTH dataset after oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.after)
 ```
 
-3. To compare the confusion matrices and ROC plot. The power of OSTSC will come out more on more training epochs. 
+Besides the loss and accuracy, the Figure 13 compares the confusion matrices of two LSTM classifications, and the Figure 14 compares the receiver operating characteristic curves. The power of OSTSC will come out more on more training epochs. 
 
-```{r, eval=FALSE}
-pred.label <- model %>% predict_classes(test.x)
-pred.label.over <- model.over %>% predict_classes(test.x)
-```
-```{r}
+```{r, echo=FALSE, fig.width = 3, fig.height = 2}
 cm.before <- table(test.label, pred.label)
 cm.after <- table(test.label, pred.label.over)
-```
-```{r, echo=FALSE}
-layout(matrix(c(1,1,2)))
+
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (before oversampling)', cex.main=1.75)
+title('(a)Before oversampling', font = 1, cex.main=1.3)
 
 rect(150, 430, 240, 370, col='#3F97D0')
 rect(250, 430, 340, 370, col='#F7AD50')
 rect(150, 305, 240, 365, col='#F7AD50')
 rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
+text(195, 435, '0', cex=1.1)
+text(295, 435, '1', cex=1.1)
+text(125, 370, 'True', cex=1.2, srt=90, font=2)
+text(245, 450, 'Predicted', cex=1.2, font=2)
+text(140, 400, '0', cex=1.1, srt=90)
+text(140, 335, '1', cex=1.1, srt=90)
 
 res <- as.numeric(cm.before)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+text(195, 400, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(195, 335, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(295, 400, round(res[3]/sum1, 4), cex=1.3, font=2, col='white')
+text(295, 335, round(res[4]/sum2, 4), cex=1.3, font=2, col='white')
 
-layout(matrix(c(1,1,2)))
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (after oversampling)', cex.main=1.75)
+title('(b)After oversampling', font = 1, cex.main=1.3)
 
 rect(150, 430, 240, 370, col='#3F97D0')
 rect(250, 430, 340, 370, col='#F7AD50')
 rect(150, 305, 240, 365, col='#F7AD50')
 rect(250, 305, 340, 365, col='#3F97D0')
-text(195, 435, '0', cex=1.2)
-text(295, 435, '1', cex=1.2)
-text(125, 370, 'True', cex=1.3, srt=90, font=2)
-text(245, 450, 'Predicted', cex=1.3, font=2)
-text(140, 400, '0', cex=1.2, srt=90)
-text(140, 335, '1', cex=1.2, srt=90)
+text(195, 435, '0', cex=1.1)
+text(295, 435, '1', cex=1.1)
+text(125, 370, 'True', cex=1.2, srt=90, font=2)
+text(245, 450, 'Predicted', cex=1.2, font=2)
+text(140, 400, '0', cex=1.1, srt=90)
+text(140, 335, '1', cex=1.1, srt=90)
 
 res <- as.numeric(cm.after)
 sum1 <- res[1] + res[3]
 sum2 <- res[2] + res[4] 
-text(195, 400, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(195, 335, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(295, 400, round(res[3]/sum1, 4), cex=1.6, font=2, col='white')
-text(295, 335, round(res[4]/sum2, 4), cex=1.6, font=2, col='white')
+text(195, 400, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(195, 335, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(295, 400, round(res[3]/sum1, 4), cex=1.3, font=2, col='white')
+text(295, 335, round(res[4]/sum2, 4), cex=1.3, font=2, col='white')
 ```
 
-The ROC plot shows the classification performances more intuitively.
+Figure 13: Normalized confusion matrix. (a) Confusion matrix of LSTM on MHEALTH dataset before oversampling. (b)Confusion matrix of LSTM on MHEALTH dataset after oversampling. 
 
-```{r, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, fig.width = 5, fig.height = 4}
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", 
          print.auc = TRUE, print.auc.cex= .8, xlab = 'False Positive Rate', 
-         ylab = 'True Positive Rate', main="ROC MHEALTH Evaluation")
+         ylab = 'True Positive Rate')
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", 
          print.auc = TRUE, print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 ```
 
+Figure 14: Receiver operating characteristic curve on MHEALTH evaluation.
+
 #### The high frequency trading dataset
 
-We extracted 30000 observations from the original high frequency trading dataset for evaluation. We split the training and setting data by ratio 1:1. The first half observations are training data, while the rest are testing.
+We extracted 30000 observations from the original high frequency trading dataset for evaluation. We split the training and setting data by ratio 1:1. The first half observations are set to training data, while the rest are set to testing data.
 
 ```{r}
 data(Dataset_HFT_Eval)
@@ -799,7 +787,7 @@ The imbalance of the train dataset is still 1:48:1.
 table(train.label)
 ```
 
-After oversampling the data is fully balanced. 
+After oversampling the data is one-vs-rest balanced. 
 
 ```{r, results='hide'}
 MyData <- OSTSC(train.sample, train.label, parallel = FALSE)
@@ -809,99 +797,44 @@ over.label <- MyData$label
 table(over.label)
 ```
 
-As same as elder examples, we use the same Long short-term memory (LSTM) classifier. 
+As same as MHEALTH examples, we use the same Long short-term memory (LSTM) classifier. And the epochs number is increased to 200 too. Figure 7 and Figure 8 display the LSTM fitting histories on loss and accuracy before and after the oversampling.
 
-1. To train the classifier on the original data before oversampling.
-
-```{r}
+```{r, echo=FALSE, message=FALSE}
 library(keras)
 library(dummies)
-train.y <- dummy(train.label)
 test.y <- dummy(test.label)
-train.x <- array(train.sample, dim = c(dim(train.sample),1)) 
 test.x <- array(test.sample, dim = c(dim(test.sample),1)) 
-```
-```{r, eval=FALSE}
-model <- keras_model_sequential()
-model %>%
-  layer_lstm(10, input_shape = c(dim(train.x)[2], dim(train.x)[3])) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_dense(dim(train.y)[2]) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_activation("softmax")
-model %>% compile(
-  loss = "categorical_crossentropy", 
-  optimizer = "adam", 
-  metrics = "accuracy"
-)
-lstm.before <- model %>% fit( 
-  x = train.x, 
-  y = train.y, 
-  validation_split = 0.1,
-  epochs = 200
-)
-plot(lstm.before)
-```
-```{r, echo=FALSE, message=FALSE}
+
 data(LSTM_HFT_predlabel_before)
 data(LSTM_HFT_full_before)
+
 pred.label <- as.vector(unlist(LSTM_HFT_predlabel_before)) 
 lstm.before <- structure(class = "keras_training_history", list(params = LSTM_HFT_full_before$params, metrics = LSTM_HFT_full_before$metrics)) 
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on HFT dataset before oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.before)
-```
-
-2. To train the classifier on the new data after oversampling.
-
-```{r}
-over.y <- dummy(over.label)
-over.x <- array(over.sample, dim = c(dim(over.sample),1)) 
-```
-```{r, eval=FALSE}
-model.over <- keras_model_sequential()
-model.over %>%
-  layer_lstm(10, input_shape = c(dim(over.x)[2], dim(over.x)[3])) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_dense(dim(over.y)[2]) %>%
-  layer_dropout(rate = 0.2) %>% 
-  layer_activation("softmax")
-model.over %>% compile(
-  loss = "categorical_crossentropy", 
-  optimizer = "adam", 
-  metrics = "accuracy"
-)
-lstm.after <- model.over %>% fit( 
-  x = over.x, 
-  y = over.y, 
-  validation_split = 0.1,
-  epochs = 200
-)
-plot(lstm_after)
 ```
 ```{r, echo=FALSE, message=FALSE}
 data(LSTM_HFT_predlabel_after)
 data(LSTM_HFT_full_after)
+
 pred.label.over <- as.vector(unlist(LSTM_HFT_predlabel_after)) 
 lstm.after <- structure(class = "keras_training_history", list(params = LSTM_HFT_full_after$params, metrics = LSTM_HFT_full_after$metrics))  
-cat("\n Plot the accuracy and loss changes during the LSTM: \n\n")
+```
+```{r, fig.width = 7, fig.height = 5, fig.cap = "LSTM fitting history on HFT dataset after oversampling. The evaluation is on loss and accuracy."}
 plot(lstm.after)
 ```
 
-3. To compare the confusion matrices and ROC plot. When the dataset size gets larger and the imbalance degree gets more severe, the OSTSC performs better than unoversampled data. 
+Besides the loss and accuracy, the Figure 15 compares the confusion matrices of two LSTM classifications, and the Figure 16 compares the receiver operating characteristic curves. When the dataset size gets larger and the imbalance degree gets more severe, the OSTSC performs better than unoversampled data. 
 
-```{r, eval=FALSE}
-pred.label <- model %>% predict_classes(test.x)
-pred.label.over <- model.over %>% predict_classes(test.x)
-```
-```{r}
+```{r, echo=FALSE, fig.width = 3, fig.height = 2}
 cm.before <- table(test.label, pred.label)
 cm.after <- table(test.label, pred.label.over)
-```
-```{r, echo=FALSE}
-layout(matrix(c(1,1,2)))
+
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (before oversampling)', cex.main=1.75)
+title('(a)Before oversampling', font = 1, cex.main=1.3)
 
 rect(140, 430, 200, 390, col='#3F97D0')
 rect(210, 430, 270, 390, col='#F7AD50')
@@ -912,33 +845,33 @@ rect(280, 345, 340, 385, col='#F7AD50')
 rect(140, 300, 200, 340, col='#F7AD50')
 rect(210, 300, 270, 340, col='#F7AD50')
 rect(280, 300, 340, 340, col='#3F97D0')
-text(170, 435, '-1', cex=1.2)
-text(240, 435, '0', cex=1.2)
-text(310, 435, '1', cex=1.2)
-text(130, 410, '-1', cex=1.2, srt=90)
-text(130, 365, '0', cex=1.2, srt=90)
-text(130, 320, '1', cex=1.2, srt=90)
-text(120, 370, 'True', cex=1.3, srt=90, font=2)
-text(240, 450, 'Predicted', cex=1.3, font=2)
+text(170, 435, '-1', cex=1.1)
+text(240, 435, '0', cex=1.1)
+text(310, 435, '1', cex=1.1)
+text(130, 410, '-1', cex=1.1, srt=90)
+text(130, 365, '0', cex=1.1, srt=90)
+text(130, 320, '1', cex=1.1, srt=90)
+text(120, 370, 'True', cex=1.2, srt=90, font=2)
+text(240, 450, 'Predicted', cex=1.2, font=2)
   
 res <- as.numeric(cm.before)
 sum1 <- res[1] + res[4] + res[7]
 sum2 <- res[2] + res[5] + res[8]
 sum3 <- res[3] + res[6] + res[9]
-text(170, 410, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(170, 365, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(170, 320, round(res[3]/sum3, 4), cex=1.6, font=2, col='white')
-text(240, 410, round(res[4]/sum1, 4), cex=1.6, font=2, col='white')
-text(240, 365, round(res[5]/sum2, 4), cex=1.6, font=2, col='white')
-text(240, 320, round(res[6]/sum3, 4), cex=1.6, font=2, col='white')
-text(310, 410, round(res[7]/sum1, 4), cex=1.6, font=2, col='white')
-text(310, 365, round(res[8]/sum2, 4), cex=1.6, font=2, col='white')
-text(310, 320, round(res[9]/sum3, 4), cex=1.6, font=2, col='white')
+text(170, 410, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(170, 365, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(170, 320, round(res[3]/sum3, 4), cex=1.3, font=2, col='white')
+text(240, 410, round(res[4]/sum1, 4), cex=1.3, font=2, col='white')
+text(240, 365, round(res[5]/sum2, 4), cex=1.3, font=2, col='white')
+text(240, 320, round(res[6]/sum3, 4), cex=1.3, font=2, col='white')
+text(310, 410, round(res[7]/sum1, 4), cex=1.3, font=2, col='white')
+text(310, 365, round(res[8]/sum2, 4), cex=1.3, font=2, col='white')
+text(310, 320, round(res[9]/sum3, 4), cex=1.3, font=2, col='white')
 
-layout(matrix(c(1,1,2)))
+layout(matrix(c(1,1,1)))
 par(mar=c(2,2,2,2))
 plot(c(100, 345), c(300, 450), type = "n", xlab="", ylab="", xaxt='n', yaxt='n')
-title('Normalized Confusion Matrix (after oversampling)', cex.main=1.75)
+title('(b)After oversampling', font = 1, cex.main=1.3)
 
 rect(140, 430, 200, 390, col='#3F97D0')
 rect(210, 430, 270, 390, col='#F7AD50')
@@ -949,44 +882,49 @@ rect(280, 345, 340, 385, col='#F7AD50')
 rect(140, 300, 200, 340, col='#F7AD50')
 rect(210, 300, 270, 340, col='#F7AD50')
 rect(280, 300, 340, 340, col='#3F97D0')
-text(170, 435, '-1', cex=1.2)
-text(240, 435, '0', cex=1.2)
-text(310, 435, '1', cex=1.2)
-text(130, 410, '-1', cex=1.2, srt=90)
-text(130, 365, '0', cex=1.2, srt=90)
-text(130, 320, '1', cex=1.2, srt=90)
-text(120, 370, 'True', cex=1.3, srt=90, font=2)
-text(240, 450, 'Predicted', cex=1.3, font=2)
+text(170, 435, '-1', cex=1.1)
+text(240, 435, '0', cex=1.1)
+text(310, 435, '1', cex=1.1)
+text(130, 410, '-1', cex=1.1, srt=90)
+text(130, 365, '0', cex=1.1, srt=90)
+text(130, 320, '1', cex=1.1, srt=90)
+text(120, 370, 'True', cex=1.2, srt=90, font=2)
+text(240, 450, 'Predicted', cex=1.2, font=2)
 
 res <- as.numeric(cm.after)
 sum1 <- res[1] + res[4] + res[7]
 sum2 <- res[2] + res[5] + res[8]
 sum3 <- res[3] + res[6] + res[9]
-text(170, 410, round(res[1]/sum1, 4), cex=1.6, font=2, col='white')
-text(170, 365, round(res[2]/sum2, 4), cex=1.6, font=2, col='white')
-text(170, 320, round(res[3]/sum3, 4), cex=1.6, font=2, col='white')
-text(240, 410, round(res[4]/sum1, 4), cex=1.6, font=2, col='white')
-text(240, 365, round(res[5]/sum2, 4), cex=1.6, font=2, col='white')
-text(240, 320, round(res[6]/sum3, 4), cex=1.6, font=2, col='white')
-text(310, 410, round(res[7]/sum1, 4), cex=1.6, font=2, col='white')
-text(310, 365, round(res[8]/sum2, 4), cex=1.6, font=2, col='white')
-text(310, 320, round(res[9]/sum3, 4), cex=1.6, font=2, col='white')
+text(170, 410, round(res[1]/sum1, 4), cex=1.3, font=2, col='white')
+text(170, 365, round(res[2]/sum2, 4), cex=1.3, font=2, col='white')
+text(170, 320, round(res[3]/sum3, 4), cex=1.3, font=2, col='white')
+text(240, 410, round(res[4]/sum1, 4), cex=1.3, font=2, col='white')
+text(240, 365, round(res[5]/sum2, 4), cex=1.3, font=2, col='white')
+text(240, 320, round(res[6]/sum3, 4), cex=1.3, font=2, col='white')
+text(310, 410, round(res[7]/sum1, 4), cex=1.3, font=2, col='white')
+text(310, 365, round(res[8]/sum2, 4), cex=1.3, font=2, col='white')
+text(310, 320, round(res[9]/sum3, 4), cex=1.3, font=2, col='white')
 ```
 
-The ROC plot shows the classification performances more intuitively. Because the dataset has three classes, the AUC value calculates by average.
+Figure 15: Normalized confusion matrix. (a) Confusion matrix of LSTM on HFT dataset before oversampling. (b)Confusion matrix of LSTM on HFT dataset after oversampling. 
 
-```{r, warning=FALSE}
+```{r, echo=FALSE, warning=FALSE, fig.width = 5, fig.height = 4}
 library(pROC)
 plot.roc(as.vector(test.label), pred.label, legacy.axes = TRUE, col = "blue", print.auc = TRUE,  
-         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate', 
-         main="ROC HFT Evaluation")
+         print.auc.cex= .8, xlab = 'False Positive Rate', ylab = 'True Positive Rate')
 plot.roc(as.vector(test.label), pred.label.over, legacy.axes = TRUE, col = "red", print.auc = TRUE,   
          print.auc.y = .4, print.auc.cex= .8, add = TRUE)
 legend("bottomright", legend=c("Before Oversampling", "After Oversampling"), 
        col=c("blue", "red"), lwd=2, cex= .6)
 ```
 
-Above are two examples on different datasets. OSTSC package could have a wide usage over multi-regions.
+Figure 16: Receiver operating characteristic curve on HFT evaluation. 
+
+The ROC plot shows the classification performances more intuitively. Because the dataset has three classes, the AUC value calculates by average. 
+
+## Conclusion
+
+`OSTSC` package is a powerful oversampling approach for univariant multi-class time series data classification. It keeps minority class data structure features in the oversampled data to ensure the class classification accuracy, even when the imbalance degree is severe. It works efficiently on 1e4 scale datasets. We used three different scale datasets to show how the package performed in the `Examples` part. It had a good performances on different scales real world datasets. OSTSC package is a good choice when dealing with highly imbalanced time series data. It could have a wide usage over multi-regions.
 
 ## References
 
